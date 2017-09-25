@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://meyp.github.io/2017/09/25/Centos6-7%E5%AE%89%E8%A3%85pip-python2-6%E5%88%B03-6/</loc>
-    <lastmod>2017-09-25T09:22:25.239Z</lastmod>
+    <lastmod>2017-09-25T09:34:24.684Z</lastmod>
     <data>
         <display>
         <title>Centos6.7安装pip + python2.6到3.6</title>
@@ -17,25 +17,8 @@
          
          
            
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://meyp.github.io/2017/04/26/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2017-09-22T14:06:13.424Z</lastmod>
-    <data>
-        <display>
-        <title>测试</title>
-        <pubTime>2017-04-26T13:55:40.000Z</pubTime>
-        
-        <tag>随笔</tag>
-         
-         
-           
              
-              <breadCrumb title="Life" url="http://meyp.github.io/categories/Life/"/>
+              <breadCrumb title="Centos" url="http://meyp.github.io/categories/Centos/"/>
           
         </display>
     </data>
