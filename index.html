@@ -373,69 +373,6 @@
           <h1 id="1-安装pip"><a href="#1-安装pip" class="headerlink" title="1.安装pip"></a>1.安装pip</h1><p>Centos6.7 默认安装的是Python2.6没有安装pip，所以要想用pip去管理软件就需要自己手</p>
 <p>动安装一下pip了。要安装pip,首先要安装setuptools.当前最新版本是36.5.0，这里是下载</p>
 <p><a href="https://pypi.python.org/pypi/setuptools#downloads “链接”">链接</a>  解压下载的文件: </p>
-<p>接下来进行安装：</p>
-<blockquote>
-<p>cd setuptools-36.5.0<br>python setup.py install</p>
-</blockquote>
-<p>安装完成后，下载pip, 最新版本是9.0.1，这是下载<a href="https://pypi.python.org/pypi/pip “链接”">链接</a><br>同样的，进行安装：  </p>
-<blockquote>
-<p>tar vxf pip-9.0.1.tar.gz<br>cd pip-9.0.1<br>python setup.py intsall</p>
-</blockquote>
-<p>安装完成后，运行pip</p>
-<p><img src="http://op2hba6jz.bkt.clouddn.com/2017/9/pip-%E5%AE%89%E8%A3%852017-09-25_164327.png" alt="pip安装成功"></p>
-<h1 id="2-升级Python2-6到3-6"><a href="#2-升级Python2-6到3-6" class="headerlink" title="2.升级Python2.6到3.6"></a>2.升级Python2.6到3.6</h1><p>由于Centos6.7安装的是python2.6，而且还不能卸载，因为很多系统组件需要依赖python2.6,</p>
-<p>所以升级到python3.6会略微有点麻烦，所以写个博客记录一下。</p>
-<p>1.在终端输入：</p>
-<blockquote>
-<p>python -V</p>
-</blockquote>
-<p>Python 2.6.6 </p>
-<p>2.使用pip安装wget</p>
-<blockquote>
-<p>pip install wget   </p>
-</blockquote>
-<p>3.使用wget下载 Python-3.6.0</p>
-<blockquote>
-<p>wget <a href="https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz">https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz</a>  </p>
-</blockquote>
-<p>4.解压文件：</p>
-<blockquote>
-<p>tar zxvf Python-3.6.0.tgz</p>
-</blockquote>
-<p>5.切换工作目录：</p>
-<blockquote>
-<p>cd Python-3.6.0</p>
-</blockquote>
-<p>6.安装：</p>
-<blockquote>
-<p>./configure<br>make all<br>make install<br>make clean<br>make distclean  </p>
-</blockquote>
-<p>7.查看版本信息：</p>
-<blockquote>
-<p>/usr/local/bin/python3.6 -V</p>
-</blockquote>
-<p>Python 3.6 </p>
-<p>8.建立软连接，使系统默认的 python指向 python3.6</p>
-<blockquote>
-<p>mv /usr/bin/python /usr/bin/python2.6.6<br>ln -s /usr/local/bin/python3.6 /usr/bin/python  </p>
-</blockquote>
-<p>9.重新检验Python 版本:</p>
-<blockquote>
-<p>python -V  </p>
-</blockquote>
-<p>10.解决系统 Python 软链接指向 Python3.6 版本后，因为yum是不兼容 Python 3.6的，所以<br>yum不能正常工作，我们需要指定 yum 的Python版本: </p>
-<blockquote>
-<p>vi /usr/bin/yum</p>
-</blockquote>
-<p>将文件头部的</p>
-<blockquote>
-<p>!/usr/bin/python</p>
-</blockquote>
-<p>改成</p>
-<blockquote>
-<p>!/usr/bin/python2.6.6</p>
-</blockquote>
-<p>将PIP3链接到/usr/bin/pip目录</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/09/25/Centos6-7安装pip-python2-6到3-6/#more" rel="contents">
