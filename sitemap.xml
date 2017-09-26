@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://meyp.github.io/about/index.html</loc>
+    
+    <lastmod>2017-09-26T02:52:03.324Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://meyp.github.io/2017/09/26/Java%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
     
     <lastmod>2017-09-26T02:30:52.106Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://meyp.github.io/404.html</loc>
     
     <lastmod>2017-04-27T11:27:20.498Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://meyp.github.io/about/index.html</loc>
-    
-    <lastmod>2017-04-27T11:14:53.146Z</lastmod>
     
   </url>
   
