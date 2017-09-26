@@ -80,6 +80,6 @@ baidusitemap:
 
 backup:
   type: git     # 指定提交类型
-  message: update xxx   # 添加git commit信息
+  message: update Time   # 添加git commit信息
   repository:   # 指定仓库类型和地址
     github: git@github.com:meyp/meyp.github.io.git,backup
