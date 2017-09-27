@@ -1,0 +1,801 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="序列化与反序列化&amp;emsp;&amp;emsp;序列化 (Serialization)是将对象的状态信息转换为可以存储或传输的形式的过程。一般将一个对象存储至一个储存媒介，例如档案或是记亿体缓冲等。在网络传输过程中，可以是字节或是XML等格式。而字节的或XML编码格式可以还原完全相等的对象。这个相反的过程又称为反序列化。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础篇--序列化与反序列化">
+<meta property="og:url" content="http://meyp.github.io/2017/09/27/Java基础篇-序列化与反序列化/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="序列化与反序列化&amp;emsp;&amp;emsp;序列化 (Serialization)是将对象的状态信息转换为可以存储或传输的形式的过程。一般将一个对象存储至一个储存媒介，例如档案或是记亿体缓冲等。在网络传输过程中，可以是字节或是XML等格式。而字节的或XML编码格式可以还原完全相等的对象。这个相反的过程又称为反序列化。">
+<meta property="og:updated_time" content="2017-09-27T10:21:47.769Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础篇--序列化与反序列化">
+<meta name="twitter:description" content="序列化与反序列化&amp;emsp;&amp;emsp;序列化 (Serialization)是将对象的状态信息转换为可以存储或传输的形式的过程。一般将一个对象存储至一个储存媒介，例如档案或是记亿体缓冲等。在网络传输过程中，可以是字节或是XML等格式。而字节的或XML编码格式可以还原完全相等的对象。这个相反的过程又称为反序列化。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/09/27/Java基础篇-序列化与反序列化/"/>
+
+
+
+
+
+  <title>Java基础篇--序列化与反序列化 | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/27/Java基础篇-序列化与反序列化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java基础篇--序列化与反序列化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T15:49:31+08:00">
+                2017-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="序列化与反序列化"><a href="#序列化与反序列化" class="headerlink" title="序列化与反序列化"></a>序列化与反序列化</h1><p>&emsp;&emsp;序列化 (Serialization)是将对象的状态信息转换为可以存储或传输的形式的过程。一般将一个对象存储至一个储存媒介，例如档案或是记亿体缓冲等。在网络传输过程中，可以是字节或是XML等格式。而字节的或XML编码格式可以还原完全相等的对象。这个相反的过程又称为反序列化。<br><a id="more"></a></p>
+<h1 id="Java对象的序列化与反序列化"><a href="#Java对象的序列化与反序列化" class="headerlink" title="Java对象的序列化与反序列化"></a>Java对象的序列化与反序列化</h1><p>&emsp;&emsp;在Java中，我们可以通过多种方式来创建对象，并且只要对象没有被回收我们都可以复用该对象。但是，我们创建出来的这些Java对象都是存在于JVM的堆内存中的。只有JVM处于运行状态的时候，这些对象才可能存在。一旦JVM停止运行，这些对象的状态也就随之而丢失了。</p>
+<p>但是在真实的应用场景中，我们需要将这些对象持久化下来，并且能够在需要的时候把对象重新读取出来。Java的对象序列化可以帮助我们实现该功能。</p>
+<p>对象序列化机制（object serialization）是Java语言内建的一种对象持久化方式，通过对象序列化，可以把对象的状态保存为字节数组，并且可以在有需要的时候将这个字节数组通过反序列化的方式再转换成对象。对象序列化可以很容易的在JVM中的活动对象和字节数组（流）之间进行转换。</p>
+<p>在Java中，对象的序列化与反序列化被广泛应用到RMI(远程方法调用)及网络传输中。</p>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>&emsp;&emsp;在分布式环境下，当进行远程通信时，无论时何种类型的数据，都会以二进制的形式在网络上传送。序列化时一种将对象以一连串的字节描述的过程，用于解决在对对象进行读写操作时所引的问题。序列化可以将对象的状态写在流里进行网络传输，或者保存到文件、数据库等系统中里，并在需要时把该流读取出来重新构造一个相同的对象。</p>
+<p>&emsp;&emsp;<strong>如何实现序列化呢？</strong> 要实现序列化的类都必须实现 Serializable 接口， Serializable 接口位于 java.lang包中，它里面没有包含任何方法。使用一个输出流（例如FileOutputStream）来构造一个ObjectOuputStream （对象流）对象，紧接着，使用该对象的 writeObject （Ojbect obj）方法就可以将 obj 对象写出（即保存其状态），要恢复时可以使用其对应的输入流。</p>
+<h3 id="序列化的两个特点"><a href="#序列化的两个特点" class="headerlink" title="序列化的两个特点"></a>序列化的两个特点</h3><blockquote>
+<p>（1）如果一个类能被序列化，那么它的子类也能够被序列化。<br>（2）由于 static 代表类的成员，transient（Java语言关键字，如果用 transient 声明一个实例变量，当对象存储时，他的之不需要维持。）代表对象的临时数据，因此被声明为这两种类型的数据成员变量是不能被序列化的。</p>
+</blockquote>
+<h3 id="相关接口和类"><a href="#相关接口和类" class="headerlink" title="相关接口和类"></a>相关接口和类</h3><blockquote>
+<p>ObjectOutput<br>ObjectInput<br>ObjectOutputStream<br>ObjectInputStream<br>Serializable  </p>
+</blockquote>
+<p>下面是一个序列化的具体实例：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">People</span> <span class="title">implements</span> <span class="title">Serializable</span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String name;   </div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;    </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">People</span>(<span class="params"></span>) </span>&#123;   </div><div class="line">        <span class="keyword">this</span>.name = <span class="string">"lili"</span>;   </div><div class="line">        <span class="keyword">this</span>.age = <span class="number">20</span>;    </div><div class="line">	&#125;   </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span>(<span class="params"></span>) </span>&#123;   </div><div class="line">        <span class="keyword">return</span> name;   </div><div class="line">	&#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span>(<span class="params">String name</span>) </span>&#123;   </div><div class="line">        <span class="keyword">this</span>.name = name;   </div><div class="line">	&#125;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span>(<span class="params"></span>) </span>&#123;   </div><div class="line">        <span class="keyword">return</span> age;   </div><div class="line">	&#125;    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span>(<span class="params"><span class="keyword">int</span> age</span>) </span>&#123;   </div><div class="line">        <span class="keyword">this</span>.age = age;   </div><div class="line">	&#125;   </div><div class="line">	   </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;   </div><div class="line"></div><div class="line">        People p = <span class="keyword">new</span> People();   </div><div class="line">        ObjectOutputStream oos = <span class="literal">null</span>;   </div><div class="line">        ObjectInputStream ois = <span class="literal">null</span>;   </div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;   </div><div class="line">            FileOutputStream fos = <span class="keyword">new</span>         FileOutputStream(<span class="string">"people.out"</span>);   </div><div class="line">            oos = <span class="keyword">new</span> ObjectOutputStream(fos);  </div><div class="line">            oos.writeObject(p);   </div><div class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">        &#125;</div><div class="line">		</div><div class="line">        People p1;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="string">"people.out"</span>);</div><div class="line">            ois = <span class="keyword">new</span> ObjectInputStream(fis);</div><div class="line">            p1 = (People) ois.readObject();</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"name:"</span> + p1.getName());</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"age:"</span> + p1.getAge());</div><div class="line">            ois.close();</div><div class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//  程序输出结果为：</span></div><div class="line"><span class="comment">//  name:ypeng</span></div><div class="line"><span class="comment">//  age:20</span></div></pre></td></tr></table></figure>
+<p>&emsp;&emsp;由于序列化的的使用会影响系统的性能，因此如果不是必须要使用序列化，应尽可能不要使用序列化。那么应该在什么情况下需要使用该序列化呢？</p>
+<blockquote>
+<p>1.需要通过网络来发送对象，或对象的状态需要被持久化到数据库或文件.<br>2.序列化能实现深复制，即可以复制引用的对象。  </p>
+</blockquote>
+<h3 id="serialVersionUID-的作用"><a href="#serialVersionUID-的作用" class="headerlink" title="serialVersionUID 的作用"></a>serialVersionUID 的作用</h3><p>&emsp;&emsp;与序列化相对的是反序列化，它将流转化为对象。在序列化与反序列化的过程中，serialVersionUID起着非常重要的作用，每个类都有一个特定的serialVersionUID，在反序列化的过程中，通过 serialVersionUID 来判定类的兼容性。 如果待序列化的对象与目标对象的 serialVersionUID 不同，那么在反序列化时就会抛出InvalidClassException异常。作为一个良好的编程习惯，最好在被序列化的类中显式地声明 serialVersinUTD（该字段必须定义为 static final）。自定义serialVersionUID 主要有如下3个有点。  </p>
+<blockquote>
+<p>1.提高了程序的效率。如果在类中未显时辰声明serialVersionUID，那么在序列化时会通过计算得到一个serialVersionUID值。通过显式地声明 serialVersionUID 的方式省去了计算的过程，因此提 高了程序的运行效率。<br>2.提高程序不同平台上的兼容性。由于各个平台的编译器在计算 serialVersionUID 时完全有可能 会采用不用的计算方式，这就会导致在一个平台上序列化的对象在另一个平台上将无法实现反序列的操作。通过显式声明 serialVersionUID 的方法完全可以避免该问题的发生。<br>3.增强程序各个版本的可兼容性。在默认情况下，每个来都有唯一的 serialVersionUID，因此当  后期对类进行修改时（例如加入新的属性），类的 serialVersionUID 值将会发生变化，这将会导 致类在修改前对象序列化的文件在修改后将无法进行反序列化操作。同样，通过显式声明serialVeriaonUID 也会解决这个问题。</p>
+</blockquote>
+<h2 id="Externalizable接口"><a href="#Externalizable接口" class="headerlink" title="Externalizable接口"></a>Externalizable接口</h2><p><strong>除了Serializable 之外，java中还提供了另一个序列化接口Externalizable</strong><br>&emsp;&emsp;Externalizable继承了Serializable，该接口中定义了两个抽象方法：writeExternal()与readExternal()。当使用Externalizable接口来进行序列化与反序列化的时候需要开发人员重写writeExternal()与readExternal()方法。由于上面的代码中，并没有在这两个方法中定义序列化实现细节，所以输出的内容为空。还有一点值得注意：在使用Externalizable进行序列化的时候，在读取对象时，会调用被序列化类的无参构造器去创建一个新的对象，然后再将被保存对象的字段的值分别填充到新对象中。所以，实现Externalizable接口的类必须要提供一个public的无参的构造器。</p>
+<p><strong>思考：在用接口 Serializable 实现序列化时，这个类中的所有属性都会被序列化，那么怎样才能实现只序列化部分属性呢？</strong><br>&emsp;&emsp;一方法为实现 Externalizable接口，开发人员可以根据实际需求来实现readExternal 方法来控制序列化与反序列化所使用的属性，这种方法的缺点为增加了编程的难度。另一种方法为使用关键字 transient 来控制序列化的属性。被 transient修饰的属性是临时的，不好被序列化。 因此，可以通过把不需要被序列化的属性用 transient 来修饰。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/27/Java-I-O流学习笔记/" rel="prev" title="Java I/O流学习笔记">
+                Java I/O流学习笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">To be or not to be, that is a question !</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序列化与反序列化"><span class="nav-number">1.</span> <span class="nav-text">序列化与反序列化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java对象的序列化与反序列化"><span class="nav-number">2.</span> <span class="nav-text">Java对象的序列化与反序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化"><span class="nav-number">2.1.</span> <span class="nav-text">序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化的两个特点"><span class="nav-number">2.1.1.</span> <span class="nav-text">序列化的两个特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关接口和类"><span class="nav-number">2.1.2.</span> <span class="nav-text">相关接口和类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#serialVersionUID-的作用"><span class="nav-number">2.1.3.</span> <span class="nav-text">serialVersionUID 的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Externalizable接口"><span class="nav-number">2.2.</span> <span class="nav-text">Externalizable接口</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
