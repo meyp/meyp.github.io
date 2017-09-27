@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="1.Java异常处理1.什么是Java异常处理&amp;emsp;&amp;emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出 这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。">
+<meta name="description" content="什么是Java异常处理&amp;emsp;&amp;emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。">
 <meta name="keywords" content="Java,异常处理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java异常处理">
 <meta property="og:url" content="http://meyp.github.io/2017/09/26/Java异常处理/index.html">
 <meta property="og:site_name" content="ypeng'Blog">
-<meta property="og:description" content="1.Java异常处理1.什么是Java异常处理&amp;emsp;&amp;emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出 这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。">
-<meta property="og:updated_time" content="2017-09-26T12:06:49.765Z">
+<meta property="og:description" content="什么是Java异常处理&amp;emsp;&amp;emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。">
+<meta property="og:updated_time" content="2017-09-27T04:48:39.873Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java异常处理">
-<meta name="twitter:description" content="1.Java异常处理1.什么是Java异常处理&amp;emsp;&amp;emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出 这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。">
+<meta name="twitter:description" content="什么是Java异常处理&amp;emsp;&amp;emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。">
 
 
 
@@ -371,35 +371,12 @@
       
 
       
-        <h1 id="1-Java异常处理"><a href="#1-Java异常处理" class="headerlink" title="1.Java异常处理"></a>1.Java异常处理</h1><h4 id="1-什么是Java异常处理"><a href="#1-什么是Java异常处理" class="headerlink" title="1.什么是Java异常处理"></a>1.什么是Java异常处理</h4><p>&emsp;&emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出</p>
-<p>这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。</p>
+        <h1 id="什么是Java异常处理"><a href="#什么是Java异常处理" class="headerlink" title="什么是Java异常处理"></a>什么是Java异常处理</h1><p>&emsp;&emsp;1.异常是指程序运行时（非编译时）所发生的错误或非正常情况，当程序违反了语义规则时JVM就会将出现的错误表示为一个异常并抛出这个异常可以在catch程序块中进行捕获，然后进行处理。而异常处理的目的则是为了提高程序的安全性与鲁棒性。</p>
 <a id="more"></a>
-<h4 id="2-异常的分类"><a href="#2-异常的分类" class="headerlink" title="2.异常的分类"></a>2.异常的分类</h4><p>&emsp;&emsp;1. Java语言吧异常当作的对象来处理，并定义了一个基类（java.lang.Throwable）作为所有异常的父类。在Java API中，已经定义了许</p>
-<p>多异常类，这些异常类分为ERROR（错误）和 Exception（异常）两大类。</p>
-<h4 id="3-运行时异常和普通异常有什么区别"><a href="#3-运行时异常和普通异常有什么区别" class="headerlink" title="3.运行时异常和普通异常有什么区别"></a>3.运行时异常和普通异常有什么区别</h4><p>&emsp;&emsp;1.Error表示程序在运行期间出现了非常严重的错误并且该错去时不可恢复的，由于这属于JVM层次的严重错误，因此这种错误是会导致程</p>
-<p>序终止执行的。此外，编译器不会检查Error是否被处理，&ensp;因此在程序不应该去捕获Error类型的异常，主要原因是运行是异常多是由于逻辑错</p>
-<p>误导致的，属于应该解决的错误，也就是说，一个正确的程序是不应该存在Error的。OutOfMemoryError、ThreadDeath 等都属于错误。当</p>
-<p>这些异常发生时，JVM一般会选择将线程终止。</p>
-<p>&emsp;&emsp;2.Exception表示可恢复的异常，是编译器可以捕获到的。&ensp;它包含两种类型：&ensp;检查异常（checked exception）和运行时异常（runtime exception）.</p>
-<p>&emsp;&emsp;2.1 检查异常  </p>
-<p>&emsp;&emsp;检查异常是在程序中做经常碰到的异常。&ensp;所有继承自Exception并且不是运行时异常的都是检查异常，比如最常见的IO异常和SQL异。这</p>
-<p>种异常都发生在编译阶段，Java编译器强制程序去捕获次类型的异常，即把可能会出现这些异常的代码放到try块中，把对异常处理的代码放到 </p>
-<p>catch块中。这种异常一般在如下几种情况中使用：</p>
-<p>&emsp;&emsp;（1）异常的发生并不会导致程序出错，进行处理后可以继续执行后续的操作，&ensp;例如，当连接数据库失败后可以重新连接后进行后续操作  </p>
-<p>&emsp;&emsp;（2） 程序依赖于不可靠的外部条件，例如IO。</p>
-<p>&emsp;&emsp;运行时异常不同于检查异常，编译器没有强制对器进行捕获并处理。如果不对这种异常进行拆除，当出现这种异常时，会由JVM来处理，  </p>
-<p>例如NullPointerException异常，它是运行时异常。在Java语言中，最常见的运行时异常包括NullPointerException（空指针异常）、Class</p>
-<p>CastException&ensp;（类型转换异常）、&ensp;ArrayIndexOutOfBoundsException&ensp;（数组越界异常）、&ensp;ArrayStoreException（数组存储异常）、  </p>
-<p>BufferOverflowException（缓冲区溢出异常）、ArithmeticException（算数异常）等。</p>
-<p>&emsp;&emsp;出现运行时异常后，系统会把异常一直往上层抛出，直到遇到处理为止。若没有处理块，则抛出到最上层；如果是多线程就用Thread.run </p>
-<p>()方法抛出，如果是单线程，就用main()方法抛出。抛出之后，如果是线程，那么这个线程也就退出了。如果是主程序抛出的异常，那么整个  </p>
-<p>程序也就退出了。所以，如果不会运行时的异常进行处理，后果是非常严重的，一旦发生，要么线程终止，要么主程序终止。</p>
-<h4 id="4-注意问题"><a href="#4-注意问题" class="headerlink" title="4.注意问题"></a>4.注意问题</h4><p>&emsp;&emsp;1. Java异常处理用到了多态的概念，如果在处理过程中，先捕获了基类，然后再捕获了子类，那么捕获子类的代码块将永远不会被执行。</p>
-<p>因此，在捕获异常时，正确的写法是：先捕获子类，再捕获基类的异常信息。</p>
-<p>&emsp;&emsp;2. 尽早抛出异常，同时对捕获的异常进行处理，或者从错误中恢复，或者让程序继续执行。对捕获的异常不进行任何处理是一个非常不好  </p>
-<p>的习惯，这样将非常不利与调试。但也不是抛出异常越多越好，对于有些异常类型，例如运行时异常，实际上根本不必处理。</p>
-<p>&emsp;&emsp;3. 可以根据实际的需求自定义异常类，这些自定义的异常类只要继承自Exception类即可。</p>
-<p>&emsp;&emsp;4. 异常能处理就处理，不能处理就抛出。</p>
+<h1 id="异常的分类"><a href="#异常的分类" class="headerlink" title="异常的分类"></a>异常的分类</h1><p>&emsp;&emsp;1. Java语言吧异常当作的对象来处理，并定义了一个基类（java.lang.Throwable）作为所有异常的父类。在JavaAPI中，已经定义了许多异常类，这些异常类分为ERROR（错误）和 Exception（异常）两大类。</p>
+<h1 id="运行时异常和普通异常有什么区别"><a href="#运行时异常和普通异常有什么区别" class="headerlink" title="运行时异常和普通异常有什么区别"></a>运行时异常和普通异常有什么区别</h1><p>&emsp;&emsp;1.Error表示程序在运行期间出现了非常严重的错误并且该错去时不可恢复的，由于这属于JVM层次的严重错误，因此这种错误是会导致程序终止执行的。此外，编译器不会检查Error是否被处理，因此在程序不应该去捕获Error类型的异常，主要原因是运行是异常多是由于逻辑错误导致的，属于应该解决的错误，也就是说，一个正确的程序是不应该存在Error的。OutOfMemoryError、ThreadDeath等都属于错误。当这些异常发生时，JVM一般会选择将线程终止。</p>
+<p>&emsp;&emsp;2.Exception表示可恢复的异常，是编译器可以捕获到的。它包含两种类型：检查异常（checked exception）和运行时异常（runtime exception）.<br>&emsp;&emsp;2.1 检查异常<br>&emsp;&emsp;检查异常是在程序中做经常碰到的异常。所有继承自Exception并且不是运行时异常的都是检查异常，比如最常见的IO异常和SQL异。这种异常都发生在编译阶段，Java编译器强制程序去捕获次类型的异常，即把可能会出现这些异常的代码放到try块中，把对异常处理的代码放到catch块中。这种异常一般在如下几种情况中使用：<br>&emsp;&emsp;（1）异常的发生并不会导致程序出错，进行处理后可以继续执行后续的操作，例如，当连接数据库失败后可以重新连接后进行后续操作。<br>&emsp;&emsp;（2） 程序依赖于不可靠的外部条件，例如IO。<br>&emsp;&emsp;运行时异常不同于检查异常，编译器没有强制对器进行捕获并处理。如果不对这种异常进行拆除，当出现这种异常时，会由JVM来处理，例如NullPointerException异常，它是运行时异常。在Java语言中，最常见的运行时异常包括NullPointerException（空指针异常）、ClassCastException（类型转换异常）、ArrayIndexOutOfBoundsException（数组越界异常）、ArrayStoreException（数组存储异常）、BufferOverflowException（缓冲区溢出 异常）、ArithmeticException（算数异常）等。<br>&emsp;&emsp;出现运行时异常后，系统会把异常一直往上层抛出，直到遇到处理为止。若没有处理块，则抛出到最上层；如果是多线程就用Thread.run ()方法抛出，如果是单线程，就用main()方法抛出。抛出之后，如果是线程，那么这个线程也就退出了。如果是主程序抛出的异常，那么整个程序也就退出了。所以，如果不会运行时的异常进行处理，后果是非常严重的，一旦发生，要么线程终止，要么主程序终止。</p>
+<h2 id="注意问题"><a href="#注意问题" class="headerlink" title="注意问题"></a>注意问题</h2><p>&emsp;&emsp;1. Java异常处理用到了多态的概念，如果在处理过程中，先捕获了基类，然后再捕获了子类，那么捕获子类的代码块将永远不会被执行。因此，在捕获异常时，正确的写法是：先捕获子类，再捕获基类的异常信息。<br>&emsp;&emsp;2. 尽早抛出异常，同时对捕获的异常进行处理，或者从错误中恢复，或者让程序继续执行。对捕获的异常不进行任何处理是一个非常不好的习惯，这样将非常不利与调试。但也不是抛出异常越多越好，对于有些异常类型，例如运行时异常，实际上根本不必处理。<br>&emsp;&emsp;3. 可以根据实际的需求自定义异常类，这些自定义的异常类只要继承自Exception类即可。<br>&emsp;&emsp;4. 异常能处理就处理，不能处理就抛出。</p>
 
       
     </div>
@@ -596,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Java异常处理"><span class="nav-number">1.</span> <span class="nav-text">1.Java异常处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-什么是Java异常处理"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1.什么是Java异常处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-异常的分类"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2.异常的分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-运行时异常和普通异常有什么区别"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3.运行时异常和普通异常有什么区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-注意问题"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4.注意问题</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是Java异常处理"><span class="nav-number">1.</span> <span class="nav-text">什么是Java异常处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异常的分类"><span class="nav-number">2.</span> <span class="nav-text">异常的分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行时异常和普通异常有什么区别"><span class="nav-number">3.</span> <span class="nav-text">运行时异常和普通异常有什么区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#注意问题"><span class="nav-number">3.1.</span> <span class="nav-text">注意问题</span></a></li></ol></li></ol></div>
             
 
           </div>
