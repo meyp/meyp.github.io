@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Centos,Python," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -90,19 +90,19 @@
 
 
 
-<meta name="description" content="1.安装pipCentos6.7 默认安装的是Python2.6没有安装pip，所以要想用pip去管理软件就需要自己手 动安装一下pip了。要安装pip,首先要安装setuptools.当前最新版本是36.5.0，这里是下载 链接  解压下载的文件:">
-<meta name="keywords" content="Centos,Python">
+<meta name="description" content="引言：&amp;emsp;&amp;emsp;在Java语言中，堆与栈都是内存中存放数据的地方。变量分为基本数据类型和引用数据类型，基本数据类型的变量（例如：byte、short、char、boolean、int、float、double、long）以及对象的引用变量，其内存都分配在栈上，变量出了作用域就会自动释放，而引用类型的变量，其内存分配在堆上或者常量池（例如字符串常量和基本数据类型常量）中，需要通过new">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Centos6.7安装pip + python2.6到3.6">
-<meta property="og:url" content="http://meyp.github.io/2017/09/25/Centos6-7安装pip-python2-6到3-6/index.html">
+<meta property="og:title" content="Java基础篇--堆和栈的区别">
+<meta property="og:url" content="http://meyp.github.io/2017/09/28/Java基础篇-堆和栈的区别/index.html">
 <meta property="og:site_name" content="ypeng'Blog">
-<meta property="og:description" content="1.安装pipCentos6.7 默认安装的是Python2.6没有安装pip，所以要想用pip去管理软件就需要自己手 动安装一下pip了。要安装pip,首先要安装setuptools.当前最新版本是36.5.0，这里是下载 链接  解压下载的文件:">
-<meta property="og:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/pip-%E5%AE%89%E8%A3%852017-09-25_164327.png">
-<meta property="og:updated_time" content="2017-09-26T02:30:50.714Z">
+<meta property="og:description" content="引言：&amp;emsp;&amp;emsp;在Java语言中，堆与栈都是内存中存放数据的地方。变量分为基本数据类型和引用数据类型，基本数据类型的变量（例如：byte、short、char、boolean、int、float、double、long）以及对象的引用变量，其内存都分配在栈上，变量出了作用域就会自动释放，而引用类型的变量，其内存分配在堆上或者常量池（例如字符串常量和基本数据类型常量）中，需要通过new">
+<meta property="og:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/2017-9-28.png">
+<meta property="og:updated_time" content="2017-09-28T14:05:03.230Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Centos6.7安装pip + python2.6到3.6">
-<meta name="twitter:description" content="1.安装pipCentos6.7 默认安装的是Python2.6没有安装pip，所以要想用pip去管理软件就需要自己手 动安装一下pip了。要安装pip,首先要安装setuptools.当前最新版本是36.5.0，这里是下载 链接  解压下载的文件:">
-<meta name="twitter:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/pip-%E5%AE%89%E8%A3%852017-09-25_164327.png">
+<meta name="twitter:title" content="Java基础篇--堆和栈的区别">
+<meta name="twitter:description" content="引言：&amp;emsp;&amp;emsp;在Java语言中，堆与栈都是内存中存放数据的地方。变量分为基本数据类型和引用数据类型，基本数据类型的变量（例如：byte、short、char、boolean、int、float、double、long）以及对象的引用变量，其内存都分配在栈上，变量出了作用域就会自动释放，而引用类型的变量，其内存分配在堆上或者常量池（例如字符串常量和基本数据类型常量）中，需要通过new">
+<meta name="twitter:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/2017-9-28.png">
 
 
 
@@ -130,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://meyp.github.io/2017/09/25/Centos6-7安装pip-python2-6到3-6/"/>
+  <link rel="canonical" href="http://meyp.github.io/2017/09/28/Java基础篇-堆和栈的区别/"/>
 
 
 
 
 
-  <title>Centos6.7安装pip + python2.6到3.6 | ypeng'Blog</title>
+  <title>Java基础篇--堆和栈的区别 | ypeng'Blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -275,7 +275,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/25/Centos6-7安装pip-python2-6到3-6/">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/28/Java基础篇-堆和栈的区别/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ypeng">
@@ -296,7 +296,7 @@
             
             
               
-                Centos6.7安装pip + python2.6到3.6
+                Java基础篇--堆和栈的区别
               
             
           </h1>
@@ -311,8 +311,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-25T15:29:42+08:00">
-                2017-09-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-28T20:58:26+08:00">
+                2017-09-28
               </time>
             
 
@@ -334,8 +334,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Centos/" itemprop="url" rel="index">
-                    <span itemprop="name">Centos</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -373,73 +373,14 @@
       
 
       
-        <h1 id="1-安装pip"><a href="#1-安装pip" class="headerlink" title="1.安装pip"></a>1.安装pip</h1><p>Centos6.7 默认安装的是Python2.6没有安装pip，所以要想用pip去管理软件就需要自己手</p>
-<p>动安装一下pip了。要安装pip,首先要安装setuptools.当前最新版本是36.5.0，这里是下载</p>
-<p><a href="https://pypi.python.org/pypi/setuptools#downloads “链接”" target="_blank" rel="external">链接</a>  解压下载的文件: </p>
-<a id="more"></a>
-<p>接下来进行安装：</p>
-<blockquote>
-<p>cd setuptools-36.5.0<br>python setup.py install</p>
-</blockquote>
-<p>安装完成后，下载pip, 最新版本是9.0.1，这是下载<a href="https://pypi.python.org/pypi/pip “链接”" target="_blank" rel="external">链接</a><br>同样的，进行安装：  </p>
-<blockquote>
-<p>tar vxf pip-9.0.1.tar.gz<br>cd pip-9.0.1<br>python setup.py intsall</p>
-</blockquote>
-<p>安装完成后，运行pip</p>
-<p><img src="http://op2hba6jz.bkt.clouddn.com/2017/9/pip-%E5%AE%89%E8%A3%852017-09-25_164327.png" alt="pip安装成功"></p>
-<h1 id="2-升级Python2-6到3-6"><a href="#2-升级Python2-6到3-6" class="headerlink" title="2.升级Python2.6到3.6"></a>2.升级Python2.6到3.6</h1><p>由于Centos6.7安装的是python2.6，而且还不能卸载，因为很多系统组件需要依赖python2.6,</p>
-<p>所以升级到python3.6会略微有点麻烦，所以写个博客记录一下。</p>
-<p>1.在终端输入：</p>
-<blockquote>
-<p>python -V</p>
-</blockquote>
-<p>Python 2.6.6 </p>
-<p>2.使用pip安装wget</p>
-<blockquote>
-<p>pip install wget   </p>
-</blockquote>
-<p>3.使用wget下载 Python-3.6.0</p>
-<blockquote>
-<p>wget <a href="https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz" target="_blank" rel="external">https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz</a>  </p>
-</blockquote>
-<p>4.解压文件：</p>
-<blockquote>
-<p>tar zxvf Python-3.6.0.tgz</p>
-</blockquote>
-<p>5.切换工作目录：</p>
-<blockquote>
-<p>cd Python-3.6.0</p>
-</blockquote>
-<p>6.安装：</p>
-<blockquote>
-<p>./configure<br>make all<br>make install<br>make clean<br>make distclean  </p>
-</blockquote>
-<p>7.查看版本信息：</p>
-<blockquote>
-<p>/usr/local/bin/python3.6 -V</p>
-</blockquote>
-<p>Python 3.6 </p>
-<p>8.建立软连接，使系统默认的 python指向 python3.6</p>
-<blockquote>
-<p>mv /usr/bin/python /usr/bin/python2.6.6<br>ln -s /usr/local/bin/python3.6 /usr/bin/python  </p>
-</blockquote>
-<p>9.重新检验Python 版本:</p>
-<blockquote>
-<p>python -V  </p>
-</blockquote>
-<p>10.解决系统 Python 软链接指向 Python3.6 版本后，因为yum是不兼容 Python 3.6的，所以<br>yum不能正常工作，我们需要指定 yum 的Python版本: </p>
-<blockquote>
-<p>vi /usr/bin/yum</p>
-</blockquote>
-<p>将文件头部的</p>
-<blockquote>
-<p>!/usr/bin/python</p>
-</blockquote>
-<p>改成</p>
-<blockquote>
-<p>!/usr/bin/python2.6.6</p>
-</blockquote>
-<p>将PIP3链接到/usr/bin/pip目录</p>
+        <h1 id="引言："><a href="#引言：" class="headerlink" title="引言："></a>引言：</h1><p>&emsp;&emsp;在Java语言中，堆与栈都是内存中存放数据的地方。变量分为基本数据类型和引用数据类型，基本数据类型的变量（例如：byte、short、char、boolean、int、float、double、long）以及对象的引用变量，其内存都分配在栈上，变量出了作用域就会自动释放，而引用类型的变量，其内存分配在堆上或者常量池（例如字符串常量和基本数据类型常量）中，需要通过new方式进行创建。<br><a id="more"></a></p>
+<h1 id="堆栈的异同"><a href="#堆栈的异同" class="headerlink" title="堆栈的异同"></a>堆栈的异同</h1><h2 id="什么是栈内存"><a href="#什么是栈内存" class="headerlink" title="什么是栈内存"></a>什么是栈内存</h2><p>&emsp;&emsp;具体而言，栈内存就是用来存放基本数据类型与引用变量。栈内存的管理是通过压栈和弹栈操作来完成的，以栈帧为基本单位来管理程序的调用关系，每当有函数调用时，都会通过压栈方式创建新的栈帧，每当函数调用结束后都会通过弹栈的方式释放栈帧  </p>
+<h2 id="什么是堆内存"><a href="#什么是堆内存" class="headerlink" title="什么是堆内存"></a>什么是堆内存</h2><p>&emsp;&emsp;堆内存用来存放运行时创建的对象。一般来讲，通过new关键字创建出来的对象都存放在堆内存。由于JVM是基于堆栈的虚拟机，而每个Java程序都运行在一个单独的JVM实例上，每一个实唯一对应一个堆，一个Java程序内的多个线程也就运行在同一个JVM实例上，因此这些线程之间会共享堆内存，由此，多线程在访问堆中的数据时需要堆数据进行同步。</p>
+<h2 id="堆栈的关联"><a href="#堆栈的关联" class="headerlink" title="堆栈的关联"></a>堆栈的关联</h2><p>&emsp;&emsp;在堆中产生了一个数组或者对象后，还可以在栈中定义一个特殊的变量，让栈中这个变量的取值等于数组或对象在堆内存中的首地址，栈中的这个变量就成了数组或对象的引用变量。引用变量就相当于是为数组对象起的一个名称，以后就可以在程序中使用栈中的引用变量来访问堆中的数组或对象。这也是Java中引用的用法。</p>
+<h2 id="从堆栈的功能和作用来比较"><a href="#从堆栈的功能和作用来比较" class="headerlink" title="从堆栈的功能和作用来比较"></a>从堆栈的功能和作用来比较</h2><p>&emsp;&emsp;简单来说，堆主要是用来存放对象的，栈主要是用来执行程序的。相较于堆，栈的存取速度更快，但栈的大小和生存周期必须是确定的，因此缺乏一定的灵活性。堆却可以在运行是动态地分配内存，生存期不用提前告诉编译器，但这也导致了其存取速度地缓慢。</p>
+<p><strong>堆和栈地存取如下示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> &#123;</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</div><div class="line">    <span class="function">Public <span class="title">People</span><span class="params">(<span class="keyword">int</span> age, <span class="keyword">int</span> height)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">        <span class="keyword">this</span>.height = height;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> &#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> i = <span class="number">1</span>; </div><div class="line">        People p = <span class="keyword">new</span> People(<span class="number">23</span>, <span class="number">183</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>在程序进入main()方法后，数据的存储关系如下所示：</strong><br><img src="http://op2hba6jz.bkt.clouddn.com/2017/9/2017-9-28.png" alt="image"><br><strong>分析：</strong><br>&emsp;&emsp;由于i为基本数据类型的局部变量，因此它存储在栈空间中，而r为对象的引用变量，因此也不在存储在栈空间中；实际的对象存储在堆空间中，当main（）方法退出后，存储在栈中的和r通过压栈和弹栈操作将会在栈中被回收，而存储在堆中的对象将会有垃圾回收器来回收。</p>
 
       
     </div>
@@ -469,9 +410,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Centos/" rel="tag"># Centos</a>
-          
-            <a href="/tags/Python/" rel="tag"># Python</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -484,15 +423,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/26/Java异常处理/" rel="next" title="Java异常处理">
-                <i class="fa fa-chevron-left"></i> Java异常处理
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/28/Java基础篇-内存泄露/" rel="prev" title="Java基础篇--内存泄露">
+                Java基础篇--内存泄露 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -632,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-安装pip"><span class="nav-number">1.</span> <span class="nav-text">1.安装pip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-升级Python2-6到3-6"><span class="nav-number">2.</span> <span class="nav-text">2.升级Python2.6到3.6</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言："><span class="nav-number">1.</span> <span class="nav-text">引言：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#堆栈的异同"><span class="nav-number">2.</span> <span class="nav-text">堆栈的异同</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是栈内存"><span class="nav-number">2.1.</span> <span class="nav-text">什么是栈内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是堆内存"><span class="nav-number">2.2.</span> <span class="nav-text">什么是堆内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆栈的关联"><span class="nav-number">2.3.</span> <span class="nav-text">堆栈的关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从堆栈的功能和作用来比较"><span class="nav-number">2.4.</span> <span class="nav-text">从堆栈的功能和作用来比较</span></a></li></ol></li></ol></div>
             
 
           </div>
