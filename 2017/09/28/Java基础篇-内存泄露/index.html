@@ -1,0 +1,793 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Java 内存回收机制&amp;emsp;&amp;emsp;要了解Java中的内存泄露问题，首先要知道Java中的垃圾回收机制（Garbage Collection，GC）,它的主要作用是回收程序中不在使用的内存。在C/C++语言进行程序开发时，开发人员必须非常仔细地管理好内存地分配与释放，如果忘记或者错误地释放内存往往会导致程序运行不正常甚至时崩溃。为了减轻开发人员地工作，同时增加系统地安全性与稳定性，Jav">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础篇--内存泄露">
+<meta property="og:url" content="http://meyp.github.io/2017/09/28/Java基础篇-内存泄露/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="Java 内存回收机制&amp;emsp;&amp;emsp;要了解Java中的内存泄露问题，首先要知道Java中的垃圾回收机制（Garbage Collection，GC）,它的主要作用是回收程序中不在使用的内存。在C/C++语言进行程序开发时，开发人员必须非常仔细地管理好内存地分配与释放，如果忘记或者错误地释放内存往往会导致程序运行不正常甚至时崩溃。为了减轻开发人员地工作，同时增加系统地安全性与稳定性，Jav">
+<meta property="og:updated_time" content="2017-09-28T05:03:46.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础篇--内存泄露">
+<meta name="twitter:description" content="Java 内存回收机制&amp;emsp;&amp;emsp;要了解Java中的内存泄露问题，首先要知道Java中的垃圾回收机制（Garbage Collection，GC）,它的主要作用是回收程序中不在使用的内存。在C/C++语言进行程序开发时，开发人员必须非常仔细地管理好内存地分配与释放，如果忘记或者错误地释放内存往往会导致程序运行不正常甚至时崩溃。为了减轻开发人员地工作，同时增加系统地安全性与稳定性，Jav">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/09/28/Java基础篇-内存泄露/"/>
+
+
+
+
+
+  <title>Java基础篇--内存泄露 | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/28/Java基础篇-内存泄露/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java基础篇--内存泄露
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-28T09:16:16+08:00">
+                2017-09-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Java-内存回收机制"><a href="#Java-内存回收机制" class="headerlink" title="Java 内存回收机制"></a>Java 内存回收机制</h1><p>&emsp;&emsp;要了解Java中的内存泄露问题，首先要知道Java中的垃圾回收机制（Garbage Collection，GC）,它的主要作用是回收程序中不在使用的内存。在C/C++语言进行程序开发时，开发人员必须非常仔细地管理好内存地分配与释放，如果忘记或者错误地释放内存往往会导致程序运行不正常甚至时崩溃。为了减轻开发人员地工作，同时增加系统地安全性与稳定性，Java语言提供了垃圾回收器来自动检测对象地作用域，可自动地把不在被使用地存储空间释放掉。具体而言，垃圾回收器要负责完成3项任务：分配内存、确保被引用对象地内存不在被错误地回收以及不再被引用地内存空间。<br><a id="more"></a></p>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><p>&emsp;&emps;Java 的内存管理就是对的的分配和释放问题。分配内存的方式多种多样，取决于该种语言的语法结构。但不论哪一种语言的内存分配方式，最后都要返回所分配内存块的其实地址，即返回一个指针到内存块的首地址。在 Java 中所有的对的都是在堆（Heap）中分配的，对象的创建通常 都是采用 new或者反射的方式，但对象释放却又直接的手段，所以对象的回收都是有 Java虚拟机通 过垃圾回收器完成的。这种收支两条线的方式确实极大减轻了程序员的工作，但同时也加重了 JVM的 工作，这也是Java程序运行速度较慢的原因之一。</p>
+<p>&emsp;&emsp;Java 的内存管理就是对象的分配和释放问题。分配内存的方式多种多样，取决于该种语言的语结构。但不论是哪一种语言的内存分配方式，最后都要返回所分配的内存块的起始地址，即返回一个指针到内存块的首地址。在Java中所有对象都是在堆（Heap）中分配的，对象的创建通常都是采用new或者是反射的方式，但对象释放却有直接的手段，所以对象的回收都是由Java虚拟机通过垃圾收集器去完成的。这种收支两条线的方法确实简化了程序员的工作，但同时也加重了JVM的工作，这也是Java 程序运行速度较慢的原因之一。因为，GC为了能够正确释放对象，GC必须监控每一个对象的运行状态，包括对象的申请、引用、被引用、复制等，GC都需要进行监控。监控对象状态是为了更加准确地、及时地释放对象，而释放对象地根本原则就是该对象不在被引用。<br>&emsp;&emsp;Java 使用有向图的方式进行内存管理，可以消除引用循环的问题，例如有三个对象相互引用，只要它们和根进程不可达，那么GC也是可以回收它们的。在Java语言中，判断一块内存空间是否符合垃圾收集器收集标准的标准只有两个：一个是给对象赋予了空值null，以下再没有调用过，另一个是给对象赋予了新值，即重新分配了内存空间。</p>
+<h1 id="Java-内存泄露"><a href="#Java-内存泄露" class="headerlink" title="Java 内存泄露"></a>Java 内存泄露</h1><p>&emsp;&emsp;内存泄露是指一个不在被程序使用的对象或者变量还在内存中占有存储空间。文章开始就提到了在C/C++语言中，内存的分配与释放是由程序员来负责的，如果程序员忘记释放已分配的内存就会造成内存泄露。而在 Java 语言中引入了垃圾回收机制，由 GC 负责回收不再使用的对象，既然有 GC 负责回收垃圾，那么是否还会存在内存泄露的问题呢？ 显而易见，这个问题肯定会出现的。<br>&emsp;&emsp;其实，判断一个内存空间是否符合垃圾回收的标准有两个：第一给对象赋予了空值null，以后再也没有被使用过；第二，给对象赋予了新值，重新分配了内存空间。一般来讲，内存泄露主要有两种情况：一是在堆中申请的空间有没有被释放；二是对象已不再被使用，但还仍然在内存中保留着。垃圾回收机制的引入可以有效地解决第一种情况；而对于第二种情况，垃圾回收机制则无法保证不在使用地对象会被释放。因此，Java 语言中的内存泄露主要指的是第二种情况。<br><strong>Java 内存泄露示例</strong></p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Vector v = <span class="keyword">new</span> Vector(<span class="number">100</span>);</div><div class="line"><span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">    <span class="keyword">Object</span> o = <span class="keyword">new</span> <span class="keyword">Object</span>();</div><div class="line">    v.<span class="built_in">add</span>(o)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>分析：</strong> 在上述示例的循环中，不断创建新的对象加到 Vector 对象中，当退出循环后，o的作用域将会结束，但是由于 v 在使用这些对象，因此 GC 无法将其回收，此时就造成了内存泄露。只有将这些对象从 Vector 中删除才能释放创建的这些对象。</p>
+<h2 id="容易引起内存泄漏的几大原因"><a href="#容易引起内存泄漏的几大原因" class="headerlink" title="容易引起内存泄漏的几大原因"></a>容易引起内存泄漏的几大原因</h2><p>&emsp;&emsp;在Java语言中，容易引起内存泄露的原因有还多，主要有以下几个方面的内容：  </p>
+<p>&emsp;&emsp;（1）静态集合类。例如HashMap和Vector。如果这些容器为静态的，由于它们的生命周期与程序一致，那么容器中的对象在程序结束之前将不能释放，从而造成内存泄露，如上例所示。  </p>
+<p>&emsp;&emsp;（2）各种连接。例如数据库连接、网络连接以及IO连接等。在对数据库进行操作的过程中，首先需要建立与数据库的连接，当不在使用时，需要调用close方法来释放与数据库的连接。只有连接被关闭后，GC才会回收对应的对象。否则，如果在访问数据库的过程中，对Conncetion、Statement或ResultSet不显式地关闭，将会造成大量地对象无法被回收，从而引起内存泄露。  </p>
+<p>&emsp;&emsp;（3）监听器。在Java语言中，往往会使用到监听器。通常一个应用中会用到多个监听器，但在释放对象地同时往往没有相应地删除监听器，这也可能导致内存泄露。</p>
+<p>&emsp;&emsp;（4）变量不合理地作用域。一般而言，如果一个变量定义地作用范围大于其他使用范围，很有可能会造成内存泄露，另一方面如果没有及时地把对象设置成null，很有可能也会导致内存泄露地发生，示例如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Server</span> &#123;</span></div><div class="line">    <span class="keyword">private</span> String msg;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">recieveMsg</span><span class="params">()</span> </span>&#123;</div><div class="line">        readFromNet(); <span class="comment">//从网络接受数据保存到msg中</span></div><div class="line">        saveDB(); <span class="comment">//把msg保存到数据库中</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>分析：</strong> 在上述伪代码中，通过readFromNet() 方法接受的消息保存在变量msg中，然后调用saveDB()方法把msg的内容保存到数据库中，此时msg已经没用了，但是由于msg的生命周期与对象的生命周期与对象的生命周期相同，此时msg还不能被回收，因此造成了内存泄露。对于这个问题，有如下两种解决办法：第一种，由于msg的作用范围只在recieveMsg()方法内，因此可以把msg定义为这个方法的局部变量，当方法结束后，msg的生命周期就会结束，此时GC就可以回收msg的内容了，第二种方法，在使用完后就把msg设置为null，这样GC也会自动回收msg内容所占的内存空间。</p>
+<p>&emsp;&emsp;（5）单例模式可能会造成内存泄露。单例模式的实现方法有很多种，下例中所使用的单例模式就可能造成内存泄露：</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">class Demo &#123;</div><div class="line">    // class body</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Singleton &#123;</div><div class="line">   <span class="keyword"> private</span> Demo de;</div><div class="line">   <span class="keyword"> private</span><span class="keyword"> static</span> Singleton<span class="built_in"> instance </span>=<span class="built_in"> new </span>Singleton(new Demo());</div><div class="line">   <span class="keyword"> private</span> Singleton(Demo de) &#123;</div><div class="line">        this.de = de;</div><div class="line">    &#125;</div><div class="line">   <span class="keyword"> public</span> Singleton getInstance() &#123;</div><div class="line">       <span class="built_in"> return </span>instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>分析：</strong> 在本例实现的单例模式中，Singleton存在一个对对象Demo的引用，由于单例对象以静态变量的方式存储，因此它在JVM的整个生命周期中都存在，同时由于它有一个对对象Demo的引用，这样会导致Demo类不能被回收。</p>
+<h1 id="预防和检测内存漏洞"><a href="#预防和检测内存漏洞" class="headerlink" title="预防和检测内存漏洞"></a>预防和检测内存漏洞</h1><p>&emsp;&emsp;在了解了引起内存泄漏的一些原因后，应该尽可能地避免和发现内存泄漏。<br>&emsp;&emsp;(1)好的编码习惯。最基本的建议就是尽早释放无用对象的引用，大多数程序员在使用临时变量的时候，都是让引用变量在退出活动域后，自动设置为null。在使用这种方式时候，必须特别注意一些复杂的对象图，例如数组、列、树、图等，这些对象之间有相互引用关系较为复杂。对于这类对象，GC 回收它们一般效率较低。如果程序允许，尽早将不用的引用对象赋为null。<br><strong>另外建议几点：</strong><br>&emsp;&emsp;在确认一个对象无用后，将其所有引用显式的置为null；当类从Jpanel或Jdialog或其它容器类继承的时候，删除该对象之前不妨调用它的removeall()方法；在设一个引用变量为null值之前，应注意该引用变量指向的对象是否被监听，若有，要首先除去监听器，然后才可以赋空值；当对象是一个Thread 的时候，删除该对象之前不妨调用它的interrupt()方法；内存检测过程中不仅要关注自己编写的类对象，同时也要关注一些基本类型的对象，例如：int[]、String、char[]等等；如果有数据库连接，使用try…finally 结构，在finally 中关闭Statement 对象和连接。<br>&emsp;&emsp;(2)好的测试工具。在开发中不能完全避免内存泄漏，关键要在发现有内存泄漏的时候能用好的测试工具迅速定位问题的所在。市场上已有几种专业检查Java内存泄漏的工具，它们的基本工作原理大同小异，都是通过监测Java程序运行时，所有对象的申请、释放等动作，将内存管理的所有信息进行统计、分析、可视化。开发人员将根据这些信息判断程序是否有内存泄漏问题。这些工具包括Optimizeit Profiler、JProbe Profiler、JinSight、Rational 公司的Purify 等。<br><strong>小记：</strong><br>映像（Reflector）是一个程序分析自己的能力。java.lang.reflect包提供了获取关于字段、构造函数、方法和类的修改器的信息的能力。利用这些信息可以建立和Java Beans组件打交道的工具。可以动态创建组件的特征。<br>堆（heap） ：栈(stack)与堆(heap)都是Java用来在Ram中存放数据的地方。与C++不同，Java自动管理栈和堆，程序员不能直接地设置栈或堆。栈的优势是，存取速度比堆要快，仅次于直接位于CPU中的寄存器。但缺点是，存在栈中的数据大小与生存期必须是确定的，缺乏灵活性。另外，栈数据可以共享，堆的优势是可以动态地分配内存大小，生存期也不必事先告诉编译器，Java的垃圾收集器会自动收走这些不再使用的数据。但缺点是，由于要在运行时动态分配内存，存取速度较慢。<br>连接池：在实际应用开发中，特别是在WEB应用系统中，如果JSP、Servlet或EJB使用JDBC直接访问数据库中的数据，每一次数据访问请求都必须经历建立数据库连接、打开数据库、存取数据和关闭数据库连接等步骤，而连接并打开数据库是一件既消耗资源又费时的工作，如果频繁发生这种数据库操作，系统的性能必然会急剧下降，甚至会导致系统崩溃。数据库连接池技术是解决这个问题最常用的方法，在许多应用程序服务器（例如：Weblogic,WebSphere,JBoss）中，基本都提供了这项技术，无需自己编程，但是，深入了解这项技术是非常必要的。<br>　　数据库连接池技术的思想非常简单，将数据库连接作为对象存储在一个Vector对象中，一旦数据库连接建立后，不同的数据库访问请求就可以共享这些连接，这样，通过复用这些已经建立的数据库连接，可以克服上述缺点，极大地节省系统资源和时间。<br>　　数据库连接池的主要操作如下：<br>　　（1）建立数据库连接池对象（服务器启动）。<br>　　（2）按照事先指定的参数创建初始数量的数据库连接（即：空闲连接数）。<br>　　（3）对于一个数据库访问请求，直接从连接池中得到一个连接。如果数据库连接池对象中没有空闲的连接，且连接数没有达到最大（即：最大活跃连接数），创建一个新的数据库连接。<br>　　（4）存取数据库。<br>　　（5）关闭数据库，释放所有数据库连接（此时的关闭数据库连接，并非真正关闭，而是将其放入空闲队列中。如实际空闲连接数大于初始空闲连接数则释放连接）。<br>　　（6）释放数据库连接池对象（服务器停止、维护期间，释放数据库连接池对象，并释放所有连接）。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/27/Java基础篇-序列化与反序列化/" rel="prev" title="Java基础篇--序列化与反序列化">
+                Java基础篇--序列化与反序列化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">To be or not to be, that is a question !</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-内存回收机制"><span class="nav-number">1.</span> <span class="nav-text">Java 内存回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存管理"><span class="nav-number">1.1.</span> <span class="nav-text">内存管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-内存泄露"><span class="nav-number">2.</span> <span class="nav-text">Java 内存泄露</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#容易引起内存泄漏的几大原因"><span class="nav-number">2.1.</span> <span class="nav-text">容易引起内存泄漏的几大原因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预防和检测内存漏洞"><span class="nav-number">3.</span> <span class="nav-text">预防和检测内存漏洞</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
