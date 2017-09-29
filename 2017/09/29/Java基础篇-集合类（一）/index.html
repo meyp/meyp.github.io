@@ -1,0 +1,791 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Collections框架&amp;emsp;&amp;emsp;Java Collectinos框架包含了大量集合接口以及这些接口的实现类和操作它们的算法（例如排序、查找、反转、替换、复制、取最小元素、取最大元素等），具体而言，主要提供了List（列表）、Queue（队列）、Set（集合）、Stack（栈）和 Map（映射表，用于存放键值对）等数据结构。其中，List、Queue、Set、Stack、都继承自C">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础篇--集合类（一）">
+<meta property="og:url" content="http://meyp.github.io/2017/09/29/Java基础篇-集合类（一）/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="Collections框架&amp;emsp;&amp;emsp;Java Collectinos框架包含了大量集合接口以及这些接口的实现类和操作它们的算法（例如排序、查找、反转、替换、复制、取最小元素、取最大元素等），具体而言，主要提供了List（列表）、Queue（队列）、Set（集合）、Stack（栈）和 Map（映射表，用于存放键值对）等数据结构。其中，List、Queue、Set、Stack、都继承自C">
+<meta property="og:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/Collection.png">
+<meta property="og:updated_time" content="2017-09-29T05:26:04.760Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础篇--集合类（一）">
+<meta name="twitter:description" content="Collections框架&amp;emsp;&amp;emsp;Java Collectinos框架包含了大量集合接口以及这些接口的实现类和操作它们的算法（例如排序、查找、反转、替换、复制、取最小元素、取最大元素等），具体而言，主要提供了List（列表）、Queue（队列）、Set（集合）、Stack（栈）和 Map（映射表，用于存放键值对）等数据结构。其中，List、Queue、Set、Stack、都继承自C">
+<meta name="twitter:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/Collection.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/09/29/Java基础篇-集合类（一）/"/>
+
+
+
+
+
+  <title>Java基础篇--集合类（一） | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/29/Java基础篇-集合类（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java基础篇--集合类（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-29T09:52:56+08:00">
+                2017-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Collections框架"><a href="#Collections框架" class="headerlink" title="Collections框架"></a>Collections框架</h1><p>&emsp;&emsp;Java Collectinos框架包含了大量集合接口以及这些接口的实现类和操作它们的算法（例如排序、查找、反转、替换、复制、取最小元素、取最大元素等），具体而言，主要提供了List（列表）、Queue（队列）、Set（集合）、Stack（栈）和 Map（映射表，用于存放键值对）等数据结构。其中，List、Queue、Set、Stack、都继承自Collection接口。<br><a id="more"></a><br><strong>示例如下：</strong><br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> &#123;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    List&lt;Integer&gt; <span class="built_in">list</span> = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</div><div class="line">    <span class="keyword">int</span> <span class="built_in">array</span>[] = &#123;<span class="number">1</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">9</span>&#125;;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">array</span>.length; i++) &#123;</div><div class="line">        <span class="built_in">list</span>.add(<span class="keyword">new</span> Integer(<span class="built_in">array</span>[i]));</div><div class="line">    &#125;</div><div class="line">    Collections.sort(<span class="built_in">list</span>);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">array</span>.length; i++) &#123;</div><div class="line">        System.out.print(<span class="built_in">list</span>.get);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//输出结果为：</span></div><div class="line"><span class="comment">// 1  3  5  8  9</span></div></pre></td></tr></table></figure></p>
+<h1 id="Collection-接口"><a href="#Collection-接口" class="headerlink" title="Collection 接口"></a>Collection 接口</h1><p>&emsp;&emsp;Collectoin是最基本的集合接口，一个Collection代表一组Object，即Collection的元素（Elements）。一些Collection允许相同的元素而另一些不行。一些能排序而另一些不行。Java SDK不能提供直接进程自Collection的类，Java SDK 提供的类都是继承自Collection的“子接口”，如   List 和 Set。<br>&emsp;&emsp;所有实现Collection接口的类都执行提供两个标准的构造函数：无参数的构造函数用于创建一个空的Collection，有一个Collection参数的构造函数用于创建一个新的Collection，这个新的Collection与新传入的Collection有相同的元素。后一个构造函数允许用于复制一个Collection。<br><strong>如何遍历Collection中的每一个元素？</strong><br><strong>不论Collection的实际类型如何，它都支持一个iterator()的方法，该方法返回一个迭代子，使用该迭代子即可逐一访问Collection中每一个元素。</strong>  典型的用法如下：<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Iterator </span><span class="keyword">it </span>= collection.<span class="keyword">iterator(); </span>//获得一个迭代</div><div class="line"><span class="symbol">while</span>(<span class="keyword">it.hasNext()) </span>&#123;</div><div class="line">    Object obj = <span class="keyword">it.next(); </span>//得到下一个元素</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>由Collection接口派生的两个接口是List和Set。</strong></p>
+<h2 id="List接口"><a href="#List接口" class="headerlink" title="List接口"></a>List接口</h2><p>&emsp;&emsp;List又成为有序的Collection。它按对象进入的顺序保存对象，所以它能对列表中的每个元素的插入和删除位置进行精确的控制。同时，它可以保存重复的对象。类似于Java中的数组。<br>和下面要提到的Set不同，List允许有相同的元素。<br>&emsp;&emsp;除了具有Collection接口必备的iterator()方法外，List还提供一个listIterator()方法，List返回一个 ListIterator接口，Iterator继承自Iterator，专门针对List，和标准的Iterator接口相比，ListIterator多了一些add()之类的方法，允许添加，删除，设定元素， 还能向前或向后遍历。<br>&emsp;&emsp;实现List接口的常用类有LinkedList，ArrayList，Vector和Stack。  </p>
+<h2 id="Set接口"><a href="#Set接口" class="headerlink" title="Set接口"></a>Set接口</h2><p>&emsp;&emsp;Set表示数学意义上的集合概念。其最主要的特点是集合中的元素不能重复，因此存入Set的每个元素都必须定义equals（）方法来确保对象的唯一性。该接口有两个实现类：HashSet和TreeSet。其中TreeSet实现了SortedSet接口，因此TreeSet容器中的元素是有序的。<br>请注意：必须小心操作可变对象（Mutable     Object）。如果一个Set中的可变元素改变了自身状态导致Object.equals(Object)=true将导致一些问题。</p>
+<h2 id="Map接口"><a href="#Map接口" class="headerlink" title="Map接口"></a>Map接口</h2><p>&emsp;&emsp;Map提供了一个从键映射到值的数据结构。它用于保存键值对，其中值可以重复，但键是唯一的，不能重复。Java类库中有许多个实现该接口的类：HashMap、TreeMap、LinkedHashMap、WeakHashMap和IdentityHashMap。虽然它们都实现了相同的接口，但执行效率却不是完全相同的。具体而言，HashMap是基于散列表实现的，采用对象的HashCode可以进行快速查询。LinkedHashMap采用列表来维护内部的顺序。TreeMap基于红黑树的数据结构来实现的，内部元素是按需排列的。<br><strong>Collection的框架类图：</strong><br><img src="http://op2hba6jz.bkt.clouddn.com/2017/9/Collection.png" alt="image"><br>ps: 分享一个在线作流程图的网站：<a href="https://www.draw.io/" target="_blank" rel="external">https://www.draw.io/</a></p>
+<p>#</p>
+<h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><p>&emsp;&emsp;迭代器（Iterator）是一个对象，它的工作是遍历并选择序列中的对象，它提供了一种访问一个容器（container）对象中的各个元素，而又不必暴露该对象内部细节的方法。通过迭代器，程序员不需要了解容器底层的结构，就可以实现对容器的遍历。由于迭代器的代价小，因此迭代器通常被称为轻量级的容器。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>&emsp;&emsp;（1）使用容器对的iterator（）方法返回一个Iterator，然后通过Iterator的next()方法返回第一个元素。<br>&emsp;&emsp;（2）使用Iterator的hasNext（）方法判断容器中是否还有元素，如果有，可以使用next（）方法获取下一个元素。<br>&emsp;&emsp;（3）可以通过remove（）方法删除迭代器返回的元素。          </p>
+<p>&emsp;&emsp;Iterator支持派生的兄弟成员。ListIterator只存在与List中，支持在迭代期间向List中添加或删除元素，并且可以在List中双向滚动。<br><strong>Iterator使用示例：</strong><br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> class IteratorTest &#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</div><div class="line">        List&lt;<span class="keyword">String</span>&gt; li = <span class="keyword">new</span> LinkedList&lt;<span class="keyword">String</span>&gt;();</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"first"</span>);</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"second"</span>);</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"third"</span>);</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"fourth"</span>);</div><div class="line">        <span class="keyword">for</span>(Iterator&lt;<span class="keyword">String</span>&gt; iter = li.iterator(); iter.hasNext()) &#123;</div><div class="line">            <span class="keyword">String</span> <span class="built_in">str</span> = (<span class="keyword">String</span>) iter.next();</div><div class="line">            System.out.<span class="built_in">print</span>(<span class="built_in">str</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//输出结果：first second third fourth</span></div></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;在使用iterator（）方法时经常会遇到ConcurretModificationException异常，这通常是由于在使用Iterator遍历容器的同时又对容器做增加或删除操作所导致的，或者由于多线程操作导致，当一个线程使用迭代器遍历容器的同时，，另一个线程对这个容器进行增加或删除操作。下例主要介绍单线程抛出ConcurrentModificationException的情况：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.uitl.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> class IteratorTest2 &#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</div><div class="line">        List&lt;<span class="keyword">String</span>&gt; li = <span class="keyword">new</span> LinkedList&lt;<span class="keyword">String</span>&gt;();</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"first"</span>);</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"second"</span>);</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"third"</span>);</div><div class="line">        li.<span class="built_in">add</span>(<span class="string">"fourth"</span>);</div><div class="line">        <span class="keyword">for</span>(Iterator&lt;<span class="keyword">String</span>&gt; it = li.iterator(); it.hasNext()) &#123;</div><div class="line">            <span class="keyword">String</span> <span class="built_in">str</span> = (<span class="keyword">String</span>)it.next();</div><div class="line">            System.out.<span class="built_in">println</span>(<span class="built_in">str</span>);</div><div class="line">            <span class="keyword">if</span>(<span class="built_in">str</span>.equals(<span class="string">"second"</span>)) &#123;</div><div class="line">                li.<span class="built_in">add</span>(<span class="string">"five"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">程序输出结果为：  </div><div class="line">    first</div><div class="line">    <span class="built_in">second</span></div><div class="line">    Exception in thread <span class="string">"main"</span> java.util.ConcurrentModificationException</div><div class="line">        at java.util.LinkedList$ListItr.checkForComodification(LinkedList.java:<span class="number">953</span>)</div><div class="line">        at java.util.LinkedList$ListItr.next(LinkedList.java:<span class="number">886</span>)             </div><div class="line">        at com.ypeng.chapter4_7.TestIterator.main(TestIterator.java:<span class="number">15</span>)</div></pre></td></tr></table></figure>
+<p><strong>分析：</strong> 抛出上述异常的主要原因是当调用容器的iterator（）方法返回Iterator对象时，把容器中包含的个数赋值给了一个变量expectModCount,在调用next（）方法时会比较变量expectModCount与容器中实际对象的个数modCount的值是否相等，若不相等，则会抛出ConcurrentModificationException异常，因此在使用Iterator遍历容器的过程中，如果对容器进行增加或删除操作，就会改变容器中对象的数量，从而导致抛出异常。解决方法为：在遍历的过程中把需要删除的对象保存到一个集合中，等遍历结束后再调用removeAll（）方法来删除，或者使用it.remove（）方法。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/28/Java基础篇-堆和栈的区别/" rel="prev" title="Java基础篇--堆和栈的区别">
+                Java基础篇--堆和栈的区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">To be or not to be, that is a question !</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Collections框架"><span class="nav-number">1.</span> <span class="nav-text">Collections框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Collection-接口"><span class="nav-number">2.</span> <span class="nav-text">Collection 接口</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#List接口"><span class="nav-number">2.1.</span> <span class="nav-text">List接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set接口"><span class="nav-number">2.2.</span> <span class="nav-text">Set接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Map接口"><span class="nav-number">2.3.</span> <span class="nav-text">Map接口</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#迭代器"><span class="nav-number">3.</span> <span class="nav-text">迭代器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#注意事项"><span class="nav-number">3.1.</span> <span class="nav-text">注意事项</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
