@@ -1,0 +1,791 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="引言：&amp;emsp;&amp;emsp;上一篇文章简要介绍了List接口、Map接口，本篇文章的目的是对比分析List接口以及Map接口的几个具体实现类的异同，从底层实现的方式来说明它们具体的区别在哪里，简要说明一些该如何选择他们来完成我们需要的功能，以便更好的提升程序的性能。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础篇--集合类（二）">
+<meta property="og:url" content="http://meyp.github.io/2017/09/29/Java基础篇-集合类（二）/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="引言：&amp;emsp;&amp;emsp;上一篇文章简要介绍了List接口、Map接口，本篇文章的目的是对比分析List接口以及Map接口的几个具体实现类的异同，从底层实现的方式来说明它们具体的区别在哪里，简要说明一些该如何选择他们来完成我们需要的功能，以便更好的提升程序的性能。">
+<meta property="og:updated_time" content="2017-09-29T14:40:30.228Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础篇--集合类（二）">
+<meta name="twitter:description" content="引言：&amp;emsp;&amp;emsp;上一篇文章简要介绍了List接口、Map接口，本篇文章的目的是对比分析List接口以及Map接口的几个具体实现类的异同，从底层实现的方式来说明它们具体的区别在哪里，简要说明一些该如何选择他们来完成我们需要的功能，以便更好的提升程序的性能。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/09/29/Java基础篇-集合类（二）/"/>
+
+
+
+
+
+  <title>Java基础篇--集合类（二） | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/29/Java基础篇-集合类（二）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java基础篇--集合类（二）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-29T20:32:26+08:00">
+                2017-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言："><a href="#引言：" class="headerlink" title="引言："></a>引言：</h1><p>&emsp;&emsp;上一篇文章简要介绍了List接口、Map接口，本篇文章的目的是对比分析List接口以及Map接口的几个具体实现类的异同，从底层实现的方式来说明它们具体的区别在哪里，简要说明一些该如何选择他们来完成我们需要的功能，以便更好的提升程序的性能。<br><a id="more"></a></p>
+<h1 id="ArrayList、Vector和LinkedList"><a href="#ArrayList、Vector和LinkedList" class="headerlink" title="ArrayList、Vector和LinkedList"></a>ArrayList、Vector和LinkedList</h1><h2 id="ArrayList类"><a href="#ArrayList类" class="headerlink" title="ArrayList类"></a>ArrayList类</h2><p>&emsp;ArrayList实现了可变大小的数组。它允许所有元素，包括null。ArrayList没有同步。size，isEmpty，get，set方法运行时间为常数。但是add方法开销为分摊的常数，添加n个元素需要O(n)的时间。其他的方法运行时间为线性。每个ArrayList实例都有一个容量（Capacity），即用于存储元素的数组的大小。这个容量可随着不断添加新元素而自动增加，但是增长算法并没有定义。当需要插入大量元素时，在插入前可以调用ensureCapacity方法来增加ArrayList的容量以提高插入效率。和LinkedList一样，ArrayList也是非同步的（unsynchronized）。</p>
+<h2 id="Vector类"><a href="#Vector类" class="headerlink" title="Vector类"></a>Vector类</h2><p>&emsp;&emsp;Vector非常类似ArrayList，但是Vector是同步的。由Vector创建的Iterator，虽然和ArrayList创建的Iterator是同一接口，但是，因为Vector是同步的，当一个Iterator被创建而且正在被使用，另一个线程改变了Vector的状态（例如，添加或删除了一些元素），这时调用Iterator的方法时将抛出ConcurrentModificationException，因此必须捕获该异常。
+　　</p>
+<h2 id="LinkedList类"><a href="#LinkedList类" class="headerlink" title="LinkedList类"></a>LinkedList类</h2><p>&emsp;&emsp;LinkedList实现了List接口，允许null元素。此外LinkedList提供额外的get，remove，insert方法在LinkedList的首部或尾部。这些操作使LinkedList可被用作堆栈（stack），队列（queue）或双向队列（deque）。<br>　　注意LinkedList没有同步方法。如果多个线程同时访问一个List，则必须自己实现访问同步。一种解决方法是在创建List时构造一个同步的List：List list = Collections.synchronizedList(new LinkedList(…));</p>
+<h2 id="不同之处"><a href="#不同之处" class="headerlink" title="不同之处"></a>不同之处</h2><p>&emsp;&emsp;ArrayList与Vector最大的区别就是synchronized（同步）的使用，ArrayList的方法都是非同步的，而Vector的绝大多数方法（例如add、insert、remove、set、equals、hashcode等）都是直接或间接同步的，所以Vector是线程安全的，ArrayList不是线程安全的。正是由于Vector提供了线程安全的机制，其性能也要略逊于ArrayList。<br>&emsp;&emsp;LinkedList是采用双向列表来实现的，对数据的索引也要从头开始遍历，因此用于随机访问则效率比较低，但是插入元素不需要对数据进行移动，因此插入效率比较高。</p>
+<h2 id="如何进行选择呢？"><a href="#如何进行选择呢？" class="headerlink" title="如何进行选择呢？"></a>如何进行选择呢？</h2><p>&emsp;&emsp;当对数据的主要操作为索引或只在集合的末端增加、删除元素时，使用ArrayList或Vector效率比较高；当对数据的操作主要作为指定位置的插入或者删除操作时，使用LinkedList效率比较高；当在多线程中使用容器时，选用Vector会比较安全。</p>
+<h1 id="HashMap、Hashtable、TreeMap和WeakHashMap"><a href="#HashMap、Hashtable、TreeMap和WeakHashMap" class="headerlink" title="HashMap、Hashtable、TreeMap和WeakHashMap"></a>HashMap、Hashtable、TreeMap和WeakHashMap</h1><h2 id="HashMap类"><a href="#HashMap类" class="headerlink" title="HashMap类"></a>HashMap类</h2><p>&emsp;&emsp;HashMap和Hashtable类似，不同之处在于HashMap是非同步的，并且允许null，即null value和null key，但是将HashMap视为Collection时（values()方法可返回Collection），其迭代子操作时间开销和 HashMap的容量成比例。因此，如果迭代操作的性能相当重要的话，不要将HashMap的初始化容量设得过高，或者load factor过低。      
+　　    </p>
+<h2 id="Hashtable类"><a href="#Hashtable类" class="headerlink" title="Hashtable类"></a>Hashtable类</h2><p>　　Hashtable继承Map接口，实现一个key-value映射的哈希表。任何非空（non-null）的对象都可作为key或者value。<br>　　添加数据使用put(key, value)，取出数据使用get(key)，这两个基本操作的时间开销为常数。<br>Hashtable通过initial capacity和load factor两个参数调整性能。通常缺省的load factor 0.75较好地实现了时间和空间的均衡。增大load factor可以节省空间但相应的查找时间将增大，这会影响像get和put这样的操作。<br>使用Hashtable的简单示例如下，将1，2，3放到Hashtable中<br>　　　　<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 他们的key分别是”one”，”two”，”three”</span></div><div class="line">        Hashtable numbers = <span class="keyword">new</span> Hashtable();</div><div class="line">        numbers.<span class="built_in">put</span>(“one”, <span class="keyword">new</span> Integer(<span class="number">1</span>));</div><div class="line">        numbers.<span class="built_in">put</span>(“two”, <span class="keyword">new</span> Integer(<span class="number">2</span>));</div><div class="line">        numbers.<span class="built_in">put</span>(“three”, <span class="keyword">new</span> Integer(<span class="number">3</span>));</div><div class="line">        <span class="comment">//要取出一个数，比如2，用相应的key：</span></div><div class="line">        Integer n = (Integer)numbers.<span class="built_in">get</span>(“two”);</div><div class="line">        System.out.<span class="built_in">println</span>(“two = ” + n);</div></pre></td></tr></table></figure></p>
+<p>　　由于作为key的对象将通过计算其散列函数来确定与之对应的value的位置，因此任何作为key的对象都必须实现hashCode和equals方法。hashCode和equals方法继承自根类Object，如果你用自定义的类当作key的话，要相当小心，按照散列函数的定义，如果两个对象相同，即obj1.equals(obj2)=true，则它们的hashCode必须相同，但如果两个对象不同，则它们的hashCode不一定不同，如果两个不同对象的hashCode相同，这种现象称为冲突，冲突会导致操作哈希表的时间开销增大，所以尽量定义好的hashCode()方法，能加快哈希表的操作。<br>　　如果相同的对象有不同的hashCode，对哈希表的操作会出现意想不到的结果（期待的get方法返回null），要避免这种问题，只需要牢记一条：要同时复写equals方法和hashCode方法，而不要只写其中一个。<br>　　<strong>Hashtable是同步的。</strong></p>
+<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>TreeMap实现了SortMap接口，能够把它保存的记录根据键排序，因此，取出来的是排序后的键值对，如果按自然顺序或自定义顺序遍历键，那么TreeMap会更好。</p>
+<h2 id="WeakHashMap类"><a href="#WeakHashMap类" class="headerlink" title="WeakHashMap类"></a>WeakHashMap类</h2><p>　　WeakHashMap是一种改进的HashMap，它对key实行“弱引用”，如果一个key不再被外部所引用，那么该key可以被GC回收。</p>
+<h2 id="HashMap与Hashtable比较"><a href="#HashMap与Hashtable比较" class="headerlink" title="HashMap与Hashtable比较"></a>HashMap与Hashtable比较</h2><p>&emsp;&emsp;（1）HashMap是Hashtable的轻量级实现（非线程安全的实现），它们都完成了Map接口，主要区别在于HashMap允许空（null）键值（key）（但需要注意的是，最多只允许一条记录的键为null，不允许多条记录的值为null），而Hashtable不允许。<br>&emsp;&emsp;（2）HashMap把Hashtable的contains方法去掉了，改成了containsValue和containsKey，因为contains方法容易让人引起误解。Hashtable继承自Dictionary类，而HashMap是Java1.2引进的Map interface的一个实现。<br>&emsp;&emsp;（3）Hashtable的方法是线程安全的，而HashMap不支持线程同步，所以不是线程安全的。在多个线程访问Hashtable时，不需要程序员对它进行同步，而对于HashMap，程序员必须提供额外的同步机制。所以就效率而言，HashMap高于Hashtable。<br>&emsp;&emsp;（4）Hashtable使用Enumeration，HashMap使用Iterator。<br>&emsp;&emsp;（5）Hashtable和HashMap采用的 hash/rehash 算法几乎都一样，所以性能没有太大差异。<br>&emsp;&emsp;（6）在Hashtable中，hash数组默认大小是11，增加的方式是old * 2 + 1。在HashMap中，hash数组的默认大小是16，而且一定是2的指数。<br>&emsp;&emsp;（7) hash值的使用不同，Hashtable直接使用对象的hashCode。</p>
+<h2 id="WeakHashMap与HashMap比较"><a href="#WeakHashMap与HashMap比较" class="headerlink" title="WeakHashMap与HashMap比较"></a>WeakHashMap与HashMap比较</h2><p>&emsp;&emsp;WeakHashMap与HashMap类似，二者的不同之处在于WeakHashMap中Key采用的是”弱引用“的方式，只要WeakHashMap中的Key不再被外部引用，它就可以被垃圾回收器回收。而HashMap中Key采用的是”强引用的方式“，当HashMap中的Key没有被外部引用时，只有在这个Key从HashMap中删除后，才可以被垃圾回收器回收。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/29/Java基础篇-集合类（一）/" rel="prev" title="Java基础篇--集合类（一）">
+                Java基础篇--集合类（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">To be or not to be, that is a question !</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言："><span class="nav-number">1.</span> <span class="nav-text">引言：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ArrayList、Vector和LinkedList"><span class="nav-number">2.</span> <span class="nav-text">ArrayList、Vector和LinkedList</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayList类"><span class="nav-number">2.1.</span> <span class="nav-text">ArrayList类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vector类"><span class="nav-number">2.2.</span> <span class="nav-text">Vector类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedList类"><span class="nav-number">2.3.</span> <span class="nav-text">LinkedList类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同之处"><span class="nav-number">2.4.</span> <span class="nav-text">不同之处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何进行选择呢？"><span class="nav-number">2.5.</span> <span class="nav-text">如何进行选择呢？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HashMap、Hashtable、TreeMap和WeakHashMap"><span class="nav-number">3.</span> <span class="nav-text">HashMap、Hashtable、TreeMap和WeakHashMap</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap类"><span class="nav-number">3.1.</span> <span class="nav-text">HashMap类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hashtable类"><span class="nav-number">3.2.</span> <span class="nav-text">Hashtable类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeMap"><span class="nav-number">3.3.</span> <span class="nav-text">TreeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeakHashMap类"><span class="nav-number">3.4.</span> <span class="nav-text">WeakHashMap类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap与Hashtable比较"><span class="nav-number">3.5.</span> <span class="nav-text">HashMap与Hashtable比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeakHashMap与HashMap比较"><span class="nav-number">3.6.</span> <span class="nav-text">WeakHashMap与HashMap比较</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
