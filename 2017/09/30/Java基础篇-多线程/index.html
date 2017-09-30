@@ -1,0 +1,790 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="什么是多线程&amp;emsp;&amp;emsp;线程是指程序在执行过程中，能够执行程序代码的一个执行单元。在Java语言中，有四种运行状态：运行、就绪、挂起和结束。一个多线程程序包含两个或多个能并发运行的部分。程序的每一部分都称作一个线程，并且每个线程定义了一个独立的执行路径。多线程是多任务的一种特别的形式。多线程比多任务需要更小的开销。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础篇--多线程">
+<meta property="og:url" content="http://meyp.github.io/2017/09/30/Java基础篇-多线程/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="什么是多线程&amp;emsp;&amp;emsp;线程是指程序在执行过程中，能够执行程序代码的一个执行单元。在Java语言中，有四种运行状态：运行、就绪、挂起和结束。一个多线程程序包含两个或多个能并发运行的部分。程序的每一部分都称作一个线程，并且每个线程定义了一个独立的执行路径。多线程是多任务的一种特别的形式。多线程比多任务需要更小的开销。">
+<meta property="og:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/thread.png">
+<meta property="og:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/compare.png">
+<meta property="og:updated_time" content="2017-09-30T07:53:09.498Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础篇--多线程">
+<meta name="twitter:description" content="什么是多线程&amp;emsp;&amp;emsp;线程是指程序在执行过程中，能够执行程序代码的一个执行单元。在Java语言中，有四种运行状态：运行、就绪、挂起和结束。一个多线程程序包含两个或多个能并发运行的部分。程序的每一部分都称作一个线程，并且每个线程定义了一个独立的执行路径。多线程是多任务的一种特别的形式。多线程比多任务需要更小的开销。">
+<meta name="twitter:image" content="http://op2hba6jz.bkt.clouddn.com/2017/9/thread.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/09/30/Java基础篇-多线程/"/>
+
+
+
+
+
+  <title>Java基础篇--多线程 | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/09/30/Java基础篇-多线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java基础篇--多线程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-30T11:15:38+08:00">
+                2017-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什么是多线程"><a href="#什么是多线程" class="headerlink" title="什么是多线程"></a>什么是多线程</h1><p>&emsp;&emsp;线程是指程序在执行过程中，能够执行程序代码的一个执行单元。在Java语言中，有四种运行状态：运行、就绪、挂起和结束。一个多线程程序包含两个或多个能并发运行的部分。程序的每一部分都称作一个线程，并且每个线程定义了一个独立的执行路径。多线程是多任务的一种特别的形式。多线程比多任务需要更小的开销。<br><a id="more"></a><br><img src="http://op2hba6jz.bkt.clouddn.com/2017/9/thread.png" alt="image">                    </p>
+<h1 id="线程与进程的区别"><a href="#线程与进程的区别" class="headerlink" title="线程与进程的区别"></a>线程与进程的区别</h1><p>&emsp;&emsp;进程是指一段正在执行的程序。而线程有时也被成为轻量级进程，它是程序执行的最小单元，一个进程可以拥有多个线程，各个线程之间共享程序的内存空间（代码段、数据段和堆空间）及一些进程级的资源（例如打开文件），但是各个线程拥有自己的栈空间，进程与线程的对比图如下：<br><img src="http://op2hba6jz.bkt.clouddn.com/2017/9/compare.png" alt="image">  </p>
+<h1 id="使用多线程的优势"><a href="#使用多线程的优势" class="headerlink" title="使用多线程的优势"></a>使用多线程的优势</h1><p>&emsp;&emsp;（1）使用多线程可以减少程序的响应时间。<br>&emsp;&emsp;（2）与进程相比，线程的创建和切换开销更小。<br>&emsp;&emsp;（3）多CPU或多核计算机本身就具有执行多线程的能力，如果使用单个线程，将无法重复利用计算机资源，造成资源的巨大浪费。<br>&emsp;&emsp;（4）使用多线程能简化程序的结构，使程序便于理解和维护。    </p>
+<h1 id="如何实现Java多线程"><a href="#如何实现Java多线程" class="headerlink" title="如何实现Java多线程"></a>如何实现Java多线程</h1><h2 id="继承Thread类，重写run（）方法"><a href="#继承Thread类，重写run（）方法" class="headerlink" title="继承Thread类，重写run（）方法"></a>继承Thread类，重写run（）方法</h2><p>&emsp;&emsp;Thread本质上也是实现了Runnable接口的一个实例，它代表一个线程的实例，并且，启动线程的唯一方法就是通过Thread类的start（）方法。start（）方法是一个native（本地）方法，它将启动一个新线程，并执行run（）方法（Thread中提供的run（）方法是一个空方法）。这种方式通过自定义直接extends Thread，并重写run（）方法，就可以启动新线程并执行自己定义的run（）方法。需要注意的是，调用start（）方法后并不是立即执行多线程代码，而是使得该线程变为可执行状态（Runnable），什么时候运行多线程代码是由操作系统决定的。下例给出Thread的使用方法：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    public void run() &#123;</div><div class="line">        <span class="type">System</span>.out.println(<span class="string">"Thread body"</span>); <span class="comment">//线程的函数体</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    public static void main(<span class="type">String</span>[] args) &#123;</div><div class="line">        <span class="type">ThreadTest</span> thread = <span class="keyword">new</span> <span class="type">ThreadTest</span>();</div><div class="line">        thread.start();<span class="comment">//开启线程</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="实现Runnable接口，并实现该接口的run-方法"><a href="#实现Runnable接口，并实现该接口的run-方法" class="headerlink" title="实现Runnable接口，并实现该接口的run() 方法"></a>实现Runnable接口，并实现该接口的run() 方法</h2><p>&emsp;&emsp;<strong>以下是具体步骤</strong>：<br>&emsp;&emsp;（1）自定义类并实现Runnable接口，实现run() 方法。<br>&emsp;&emsp;（2）创建Thread对象，用实现Runnable接口的对象作为参数实例化该Thread对象。<br>&emsp;&emsp;（3）调用Thread的start()方法。   </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadTest2</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Thread body"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test2</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ThreadTest2 thread = <span class="keyword">new</span> ThreadTest2();</div><div class="line">        Thred t = <span class="keyword">new</span> Thread(thread);</div><div class="line">        t.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不管是通过继承Thread类还是通过使用Runnable接口来实现多线程的方法，最终还是通过Thread对象的API来控制线程的。</p>
+<h2 id="实现Callable接口，重写call-方法"><a href="#实现Callable接口，重写call-方法" class="headerlink" title="实现Callable接口，重写call()方法"></a>实现Callable接口，重写call()方法</h2><p>&emsp;&emsp;Callable接口实际是属于Executor框架中的功能类，Callabel接口与Runnable接口的功能类似，但提供了比Runnable更强大的功能，主要体现在以下三点：<br>&emsp;&emsp;（1）Callable可以在任务结束后提供一个返回值，Runnable无法提供这个功能。<br>&emsp;&emsp;（2）Callable中的call()方法可以抛出异常，而Runnable的run（）方法不能抛出异常。<br>&emsp;&emsp;（3）运行Callable可以拿到一个Future对象，Future对象表示异步计算的结果，它提供了检查计算是否完成的方法。由于线程属于异步计算模型，因此无法中别的线程中得到函数的返回值，在这种情况下，就可以使用Future来监视目标线程调用call()方法的情况，当调用Future的get()方法获取结果时，当前线程就会阻塞，知道call（）方法结束返回结果。  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">import java.util.concurrent.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CallableAndFuture</span> &#123;</div><div class="line">    <span class="comment">//创建线程类</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>)  </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">call</span>(<span class="params"></span>) throws Exception </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"Hello World!"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">Stirng[] args</span>) </span>&#123;</div><div class="line">        ExecutorService threadPool = Executors.newSingleThreadExecutor();</div><div class="line">        <span class="comment">//start the thread</span></div><div class="line">        Future&lt;String&gt; future = threadPool.submit(<span class="keyword">new</span> CallableTest));</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"waiting thread to finish!"</span>);</div><div class="line">            System.<span class="keyword">out</span>.println(future.<span class="keyword">get</span>()); <span class="comment">//等待线程结束，并获取返回结果</span></div><div class="line">        &#125;<span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//输出结果为：  waiting thread to finish          Hello World!</span></div></pre></td></tr></table></figure>
+<p>&emsp;&emsp;以上3种方式种，前两种方式线程执行完成后都没有返回值，只有最后一种是带返回值的。当需要实现多线程时，一般推荐实现Runnable接口的方式，其原因是：首先，Thread类定义了多种方法可以被派生类使用或重写。但是只有run()方法是必须被重写的，在run()方法中实现这个线程的主要功能。这当然是实现Runnable接口所需要的方法。其次，很多Java程序员认为，一个类仅在它们需要被加载或修改时才会被继承。因此，如果没有必要重写Thread类中的其他方法，那么通过继承Thread的实现方式与实现Runnable接口的效果相同，在这种情况下最好通过实现Runnable接口的方式来创建线程。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/29/Java基础篇-集合类（二）/" rel="prev" title="Java基础篇--集合类（二）">
+                Java基础篇--集合类（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">To be or not to be, that is a question !</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是多线程"><span class="nav-number">1.</span> <span class="nav-text">什么是多线程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程与进程的区别"><span class="nav-number">2.</span> <span class="nav-text">线程与进程的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用多线程的优势"><span class="nav-number">3.</span> <span class="nav-text">使用多线程的优势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何实现Java多线程"><span class="nav-number">4.</span> <span class="nav-text">如何实现Java多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#继承Thread类，重写run（）方法"><span class="nav-number">4.1.</span> <span class="nav-text">继承Thread类，重写run（）方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现Runnable接口，并实现该接口的run-方法"><span class="nav-number">4.2.</span> <span class="nav-text">实现Runnable接口，并实现该接口的run() 方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现Callable接口，重写call-方法"><span class="nav-number">4.3.</span> <span class="nav-text">实现Callable接口，重写call()方法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
