@@ -1,0 +1,783 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="为什么需要线程同步&amp;emsp;&amp;emsp;当使用多线程访问同一个资源时，非常容易出现线程安全性的问题（例如，当多个线程对同一个数据进行修改时，会导致某些线程对数据的修改丢失）。而对线程进行同步能够很好的解决这个问题。">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础篇--线程的同步与锁机制">
+<meta property="og:url" content="http://meyp.github.io/2017/10/01/Java基础篇-线程的同步与锁机制/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="为什么需要线程同步&amp;emsp;&amp;emsp;当使用多线程访问同一个资源时，非常容易出现线程安全性的问题（例如，当多个线程对同一个数据进行修改时，会导致某些线程对数据的修改丢失）。而对线程进行同步能够很好的解决这个问题。">
+<meta property="og:updated_time" content="2017-10-01T04:00:14.321Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础篇--线程的同步与锁机制">
+<meta name="twitter:description" content="为什么需要线程同步&amp;emsp;&amp;emsp;当使用多线程访问同一个资源时，非常容易出现线程安全性的问题（例如，当多个线程对同一个数据进行修改时，会导致某些线程对数据的修改丢失）。而对线程进行同步能够很好的解决这个问题。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/10/01/Java基础篇-线程的同步与锁机制/"/>
+
+
+
+
+
+  <title>Java基础篇--线程的同步与锁机制 | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/10/01/Java基础篇-线程的同步与锁机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java基础篇--线程的同步与锁机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-01T09:46:11+08:00">
+                2017-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="为什么需要线程同步"><a href="#为什么需要线程同步" class="headerlink" title="为什么需要线程同步"></a>为什么需要线程同步</h1><p>&emsp;&emsp;当使用多线程访问同一个资源时，非常容易出现线程安全性的问题（例如，当多个线程对同一个数据进行修改时，会导致某些线程对数据的修改丢失）。而对线程进行同步能够很好的解决这个问题。<br><a id="more"></a></p>
+<h1 id="内置锁"><a href="#内置锁" class="headerlink" title="内置锁"></a>内置锁</h1><p>&emsp;&emsp;Java提供了一种内置的锁机制来支持原子性：同步代码块（Synchronized Block）。同步代码块包括两部分：一个作为所得对象的引用，一个作用由这个锁保护的代码块。以关键字synchronized来修饰的方法就是一种横跨整个方法体的同步代码块，其中该同步代码块的锁机制就是方法调用所在的对象。静态的synchronized方法以Class对象作为锁。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">synchronized</span><span class="params">(lock)</span></span> &#123;</div><div class="line">    <span class="comment">//访问或修改由锁包保护的共享状态</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;每个Java对象都可以用做一个实现同步的锁，这些锁被成为内置锁（Intrinsic Lock）或监视器锁（Monitor Lock）。线程在进入同步代码块之前会自动获得锁，并且在退出同步代码块时自动司法锁，而无论是通过正常的控制路径退出，还是通过从代码块中抛出异常退出。获得内置锁的唯一途径就是进入由这个锁保护的同步代码块或方法。     </p>
+<p><strong>关于锁和同步，有一下几个要点：</strong><br>1）、只能同步方法，而不能同步变量和类；<br>2）、每个对象只有一个锁；当提到同步时，应该清楚在什么上同步？也就是说，在哪个对象上同步？<br>3）、不必同步类中所有的方法，类可以同时拥有同步和非同步方法。<br>4）、如果两个线程要执行一个类中的synchronized方法，并且两个线程使用相同的实例来调用方法，那么一次只能有一个线程能够执行方法，另一个需要等待，直到锁被释放。也就是说：如果一个线程在对象上获得一个锁，就没有任何其他线程可以进入（该对象的）类中的任何一个同步方法。<br>5）、如果线程拥有同步和非同步方法，则非同步方法可以被多个线程自由访问而不受锁的限制。<br>6）、线程睡眠时，它所持的任何锁都不会释放。<br>7）、线程可以获得多个锁。比如，在一个对象的同步方法里面调用另外一个对象的同步方法，则获取了两个对象的同步锁。<br>8）、同步损害并发性，应该尽可能缩小同步范围。同步不但可以同步整个方法，还可以同步方法中一部分代码块。<br>9）、在使用同步代码块时候，应该指定在哪个对象上同步，也就是说要获取哪个对象的锁。例如：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">int</span> <span class="title">fix</span><span class="params">(<span class="keyword">int</span> y)</span> </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            x = x - y;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> x;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>当然，同步方法也可以改写为非同步方法，但功能完全一样的，例如：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="function"><span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> x++;</div><div class="line">    &#125;</div><div class="line">与</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            <span class="keyword">return</span> x;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>效果是完全一样的。</p>
+<h1 id="同步机制的实现方式"><a href="#同步机制的实现方式" class="headerlink" title="同步机制的实现方式"></a>同步机制的实现方式</h1><h2 id="synchronized-关键字"><a href="#synchronized-关键字" class="headerlink" title="synchronized 关键字"></a>synchronized 关键字</h2><p>&emsp;&emsp;synchronized关键字主要用两种用法（synchronized方法可synchronized块），此外还可以作用于静态方法、类或某个实例，但这都对程序的效率有很大的影响。<br>&emsp;&emsp;（1）synchronized方法。在方法的声明前加入synchronized关键字，示例如下：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="function"><span class="keyword">void</span> <span class="title">multiThreadAccess</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;只要把多个线程对类需要被同步的资源的操作放到multiThreadAccess()方法中，就能保证这个方法在同一时刻只能被一个线程访问，从而保证了多线程访问的安全性。然而，当一个方法的方法体规模非常大时，把该方法声明为synchronized会大大影响程序的执行效率。为提高程序的效率，Java提供了synchronized块。<br>&emsp;&emsp;（2）synchronized块。synchronized块既可以把任意的代码段声明为synchronized，也可以指定上锁的对象，具有非常高的灵活性。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">synchronized</span><span class="params">(syncObject)</span></span> &#123;</div><div class="line">    <span class="comment">//访问syncObject的代码</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="wait-方法与notify-方法"><a href="#wait-方法与notify-方法" class="headerlink" title="wait()方法与notify()方法"></a>wait()方法与notify()方法</h2><p>&emsp;&emsp;当使用synchronized来修饰某个共享资源时，如果线程A1在执行synchronized代码，另一个线程A2也要同时执行同一对象的同一synchronized代码时，线程A2将要等到线程A1执行完成后，才能继续执行。在这种情况下可以使用wait()方法和notify()方法。<br>&emsp;&emsp;在synchronized代码被执行期间，线程可以调用对象的wait()方法，释放对象锁，进入等待状态，并且可以调用notify()方法或notifyAll()方法通知正在等待的其他线程。notify()方法仅唤醒一个线程（等待队列中的第一个线程）并允许它取获得锁，notifyAll()方法唤醒所有等待这个对象的线程并允许它们去获得锁（并不是让所有唤醒线程都获取到锁，而是让它们去竞争）。</p>
+<h2 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h2><p>&emsp;&emsp;JDK1.5新增加了Lock接口以及它的一个实现类ReentrantLock（重入锁），Lock也可以用来实现多线程的同步，具体而言，它提供了如下一些方法来实现多线程的同步：<br>&emsp;&emsp;（1）lock()。以阻塞的方式获取锁，也就是说，如果获取到了锁，立即返回；如果没有获取到锁，当先线程等待，知道获取到锁后返回。<br>&emsp;&emsp;（2）tryLock()。以非阻塞的方式获取锁。只是常识性地获取一下锁，如果获取锁，立即返回true，否则，立即返回false。<br>&emsp;&emsp;（3）tryLock(long timeout, TimeUnit unit)。如果获取了锁，立即返回true，否则等待参数给定的时间单元，在等待的过程中，如果获取了锁，就返回true，如果等待超时，返回false。<br>&emsp;&emsp;（4）lockInterruptibly()。如果获取了锁，立即返回；如果没有获取锁，当前线程处于休眠状态，知道获取锁，或者当前线程被别的线程中断（会收到InterruptedException异常）。它与lock()方法的最大区别在于如果lock()方法获取不到锁，会一直处于阻塞状态，且会忽略interrupt()方法，示例如下：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">import java.util.concurrent.locks.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Test</span> &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</div><div class="line">        final Lock <span class="keyword">lock</span> = <span class="keyword">new</span> ReentrantLock();</div><div class="line">        <span class="keyword">lock</span>.<span class="keyword">lock</span>();</div><div class="line">        Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>(<span class="params"></span>) </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    <span class="keyword">lock</span>.interruptibly();</div><div class="line">                    <span class="comment">//lock.lock();//编译错误</span></div><div class="line">                &#125;<span class="keyword">catch</span>(InterruptedException e) &#123;</div><div class="line">                    System.<span class="keyword">out</span>.println(<span class="string">"interrupted"</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        t1.start();</div><div class="line">        t1.interrupt();</div><div class="line">        Thread.sleep(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="synchronized与Lock有什么异同"><a href="#synchronized与Lock有什么异同" class="headerlink" title="synchronized与Lock有什么异同"></a>synchronized与Lock有什么异同</h1><p>&emsp;&emsp;Java语言提供了两种锁机制来实现对某个共享资源的同步：synchronized和Lock。其中synchronized使用Object对象本身的notify、wait、notifyAll调度机制，而Lock可以使用Condition进行线程之间的调度，完成了synchronized实现的所有功能。<br>&emsp;&emsp;具体而言，二者的区别主要体现在以下几个方面的内容：<br>&emsp;&emsp;（1）用法不一样。在需要同步的对象中加入synchronized控制，synchronized既可以加在方法上，又可以加在特定代码块中，括号表示需要锁的对象。而Lock需要显式的指定起始位置和终止位置。synchronized是托管给JVM执行的，而Lock是通过代码实现的，它有比synchronzied更精确的线程语义。<br>&emsp;&emsp;（2）性能不一样。在JDK1.5中增加了一个Lock接口的实现类ReetrantLock。它不仅拥有和synchronized相同的并发性和内存语义，还多了锁投票、定时锁、等候和中断等。它们的性能在不同的情况下会有所不同：在资源竞争不是很激烈的情况下，synchronized的性能要优于ReetrantLock，但是在资源竞争很激烈的情况下，synchronized的性能会下降的非常块，而ReetrantLock的性能基本保持不变。<br>&emsp;&emsp;（3）锁机制不一样。synchronized获得锁和释放锁的方式都是在块结构中，当获得多个锁必须以相反的顺序释放，并且是自动解锁，不会因为出了异常而导致锁没有被释放从而引起锁问题的发生。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/30/Java基础篇-多线程/" rel="prev" title="Java基础篇--多线程">
+                Java基础篇--多线程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">To be or not to be, that is a question !</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么需要线程同步"><span class="nav-number">1.</span> <span class="nav-text">为什么需要线程同步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内置锁"><span class="nav-number">2.</span> <span class="nav-text">内置锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同步机制的实现方式"><span class="nav-number">3.</span> <span class="nav-text">同步机制的实现方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#synchronized-关键字"><span class="nav-number">3.1.</span> <span class="nav-text">synchronized 关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wait-方法与notify-方法"><span class="nav-number">3.2.</span> <span class="nav-text">wait()方法与notify()方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lock"><span class="nav-number">3.3.</span> <span class="nav-text">Lock</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized与Lock有什么异同"><span class="nav-number">4.</span> <span class="nav-text">synchronized与Lock有什么异同</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
