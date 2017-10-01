@@ -1,0 +1,762 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="yuepeng.me, yuepeng, ypeng" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="title: Java基础篇–JDBC操作date: 2017-10-01 17:19:53categories: Java  tags: JavaJDBC是如何操作数据库的&amp;emsp;&amp;emsp;Java数据库连接（Java DataBase Connectivity，JDBC）用于在Java程序中实现数据库操作的功能，它提供了执行SQL语句、访问各种数据库的方法，并为各种不同的数据库提供统一">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ypeng'Blog">
+<meta property="og:url" content="http://meyp.github.io/2017/10/01/Java基础篇-JDBC操作/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="title: Java基础篇–JDBC操作date: 2017-10-01 17:19:53categories: Java  tags: JavaJDBC是如何操作数据库的&amp;emsp;&amp;emsp;Java数据库连接（Java DataBase Connectivity，JDBC）用于在Java程序中实现数据库操作的功能，它提供了执行SQL语句、访问各种数据库的方法，并为各种不同的数据库提供统一">
+<meta property="og:updated_time" content="2017-10-01T12:47:03.812Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ypeng'Blog">
+<meta name="twitter:description" content="title: Java基础篇–JDBC操作date: 2017-10-01 17:19:53categories: Java  tags: JavaJDBC是如何操作数据库的&amp;emsp;&amp;emsp;Java数据库连接（Java DataBase Connectivity，JDBC）用于在Java程序中实现数据库操作的功能，它提供了执行SQL语句、访问各种数据库的方法，并为各种不同的数据库提供统一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/10/01/Java基础篇-JDBC操作/"/>
+
+
+
+
+
+  <title> | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/10/01/Java基础篇-JDBC操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-01T17:19:53+08:00">
+                2017-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>title: Java基础篇–JDBC操作<br>date: 2017-10-01 17:19:53<br>categories: Java </p>
+<h2 id="tags-Java"><a href="#tags-Java" class="headerlink" title="tags: Java"></a>tags: Java</h2><h1 id="JDBC是如何操作数据库的"><a href="#JDBC是如何操作数据库的" class="headerlink" title="JDBC是如何操作数据库的"></a>JDBC是如何操作数据库的</h1><p>&emsp;&emsp;Java数据库连接（Java DataBase Connectivity，JDBC）用于在Java程序中实现数据库操作的功能，它提供了执行SQL语句、访问各种数据库的方法，并为各种不同的数据库提供统一的操作接口，java.sql包中包含了JDBC操作数据库的所有类。通过JDBC操作数据库一般有以下几个步骤：<br><a id="more"></a><br>&emsp;&emsp;（1）加载JDBC驱动器并将其注册到DriverManager中。将数据库的JDBC驱动加载到classpath中，在基于JavaEE的开发过程中，要将对应数据的JDBC驱动复制到WEB-INF/lib下。这通过java.lang.Class类的静态方法forName(String  className)实现。 示例：                </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>&#123;   </div><div class="line">    <span class="comment">//加载MySql的驱动类   </span></div><div class="line">    <span class="keyword">Class</span>.forName(<span class="string">"com.mysql.jdbc.Driver"</span>) ;   </div><div class="line">&#125;<span class="keyword">catch</span>(ClassNotFoundException e)&#123;   </div><div class="line">    System.out.<span class="keyword">println</span>(<span class="string">"找不到驱动程序类 ，加载驱动失败！"</span>);   </div><div class="line">    e.printStackTrace() ;   </div><div class="line">&#125;  </div><div class="line">```   </div><div class="line"></div><div class="line">&amp;emsp;&amp;emsp;（<span class="number">2</span>）提供JDBC连接的URL   </div><div class="line">&gt;连接URL定义了连接数据库时的协议、子协议、数据源标识。   </div><div class="line">书写形式：协议：子协议：数据源标识   </div><div class="line">协议：在JDBC中总是以jdbc开始   </div><div class="line">子协议：是桥连接的驱动程序或是数据库管理系统名称。   </div><div class="line">数据源标识：标记找到数据库来源的地址与连接端口。   </div><div class="line">例如：（MySql的连接URL）   </div><div class="line">jdbc:mysql:<span class="comment">//localhost:3306/test?useUnicode=true&amp;characterEncoding=gbk ;   </span></div><div class="line">useUnicode=<span class="keyword">true</span>：表示使用Unicode字符集。如果characterEncoding设置为   </div><div class="line">gb2312或GBK，本参数必须设置为<span class="keyword">true</span> 。characterEncoding=gbk：字符编码方式。              </div><div class="line"></div><div class="line">&amp;emsp;&amp;emsp;（<span class="number">3</span>）建立数据库连接，取得Connection对象。一般通过DriverManager.getConnection(url,username,passwd)方法来实现，其中url如上所述，username表示连接数据库的用户名，passwd表示连接数据库的密码。示例如下：</div></pre></td></tr></table></figure>
+<p>//连接MySql数据库，用户名和密码都是root<br>    String url = “jdbc:mysql://localhost:3306/test” ;<br>    String username = “root” ;<br>    String passwd = “root” ;<br>    try{<br>        Connection conn = DriverManager.getConnection(url , username , passwd ) ;<br>    }catch(SQLException se){<br>        System.out.println(“数据库连接失败！”);<br>        se.printStackTrace() ;<br>    }<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">4</span>）建立Statement对象或是PrepareStatement对象。           </div><div class="line">+ 要执行SQL语句，必须获得java.sql.Statement实例，Statement实例分为以下<span class="number">3</span>种类型：   </div><div class="line">    + 执行静态SQL语句。通常通过Statement实例实现。   </div><div class="line">    + 执行动态SQL语句。通常通过PreparedStatement实例实现。   </div><div class="line">    + 执行数据库存储过程。通常通过CallableStatement实例实现。   </div><div class="line">    具体的实现方式：   </div><div class="line">    Statement stmt = conn.createStatement() ;   </div><div class="line">    PreparedStatement pstmt = conn.prepareStatement(sql) ;   </div><div class="line">    CallableStatement cstmt = conn.prepareCall(<span class="string">"&#123;CALL demoSp(? , ?)&#125;"</span>) ;      </div><div class="line"></div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">5</span>）执行SQL语句。Statement接口提供了三种执行SQL语句的方法：executeQuery 、executeUpdate和execute。    </div><div class="line">  </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">6</span>）访问结果集ResultSet对象。      </div><div class="line"></div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">7</span>）一次将ResultSet、Statement、PrepareedStatement、Connection对象关闭，释放掉所有资源，例如rs.close()，conn.close()等。为什么要这么做呢？因为JDBC驱动在底层通常都是通过网络IO实现SQL命令与传输数据的，如果不及时关闭可能会对程序性能带来巨大的影响。</div><div class="line">以下是一个具体的示例：</div><div class="line">首先创建一个数据库，以Mysql为例：</div></pre></td></tr></table></figure></p>
+<p>create database example;<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">在数据库<span class="built_in">example</span>中创建一个Emp表：</div></pre></td></tr></table></figure></p>
+<p>use example;</p>
+<p>create table Emp (<br>    id int primary key,<br>    name varchar(20),<br>    age int,<br>    sex varchar(10)<br>)<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">创建一个示例程序：</div></pre></td></tr></table></figure></p>
+<p>import java.sql.*;</p>
+<p>public class Test {<br>    public static void main(String[] args) throws Exception {<br>        String username = “root”;<br>        String passwd = “root”;<br>        String url = “jdbc:mysql://localhost:3306/example?useUnicode=true&amp;characterEncoding=gbk”;<br>        String driver = “com.mysql.jdbc.Driver”;<br>        Connection conn = null;<br>        Statement stmt = null;<br>        ResultSet res = null;<br>        try {<br>            Class.forName(driver);<br>            conn = DriverManager.getConnection(url, username, passwd);<br>            stmt = conn.createStatement();<br>            stmt.execute(“insert into Emp values(1, ‘Jobs’, 25, ‘male’)”);<br>            stmt.execute(“insert into Emp values(2, ‘Lisa’, 19, ‘female’)”);<br>            res = stmt.executeQuery(“select * from Emp”);<br>            while(res.next()) {<br>                System.out.println(res.getInt(1) + “ “ + res.getString(2) + “ “ + res.getInt(3) + “ “ + res.getString(4));<br>            }catch(SQLException e) {<br>                e.printStackTrace();<br>            }finally {<br>                try {<br>                    if(res != null) res.close();<br>                    if(conn != null) conn.close();<br>                    if(stmt != null) stmt.close();<br>                }catch(SQLException e) {<br>                    System.out.println(e.getMessage());<br>                }<br>            }<br>        }<br>    }<br>}<br>//程序运行结果为：1 Jobs 25 male      2 Lisa 19 female<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta"># JDBC处理事务有哪些方法</span></div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;一个事务是由一条或多条对数据库操作的SQL语句组成的一个不可分割的工作单元，只有当事务中的所有操作都正常执行完了，整个事务才会被提交给数据库。在JDBC中，是通过commit()方法或rollback()方法来结束事务的操作。其中commit()方法表示完成对事务的提交，rollback()方法表示完成事务回滚，多用于在处理事务的过程中出现了异常的情况，这两种方法都位于java.sql.Connection类中。一般而言事务默认操作是自动提交的，即操作成功后，系统将自动调用commit()方法，否则将调用rollback()方法。      </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;当然，在JDBC中，也可以通过调用setAutoCommit(false)方法来禁止自动提交，然后可以把多个数据操作的表达式作为一个事务，在操作完成后调用commit()方法来实现整体提交，如果其中一个表达式操作失败，就会抛出异常而不会调用commit()方法。在这种情况下就可以在异常捕获的代码块中调用rollback()方法进行事务回滚。通过此种方法可以保持对数据库的多次操作后，数据依旧保持一致性。      </div><div class="line"></div><div class="line">**引申：JDBC 有哪些事务隔离级别？**   </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;在JDBC中，定义了以下<span class="number">5</span>种事务隔离级别：  </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">1</span>）TRANSACTION_NONE，不支持事务。 </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">2</span>）TRANSACTION_READ_UNCOMMITTED，未提交读。说明在提交前一个事务可以看到另一个事务的变化。这样读“脏”数据、不可重复读和虚读都是允许的。  </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">3</span>）TRANSACTION_READ_COMMITTED，已提交读。说明读取未提交的数据是不允许的。这个级别仍然允许不可重复读和虚读产生。  </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">4</span>）TRANSACTION_REPEATABLE_READ，可重复读。说明事务保证能够再次读取相同的数据而不会失败，但虚读仍然会出现。  </div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;（<span class="number">5</span>）TRANSACTION_SERIALIZABLE，可序列化。这是最高的事务级别，它防止读“脏”数据、不可重复读数据和虚读。     </div><div class="line"></div><div class="line"><span class="meta"># Statement和PreparedStatement有什么区别  </span></div><div class="line"></div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;Statement用于执行不带参数的简单SQL语句，并返回它所生成结果的对象，每次执行SQL语句时，数据库都要编译该SQL语句。下面是一个最简单的SQL语句：</div></pre></td></tr></table></figure></p>
+<p>Statement stmt = conn.getStatement();<br>stmt.executeUpdate(“insert into Emp values(3, ‘Lily’, 20, ‘female’)”);<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="variable">&amp;emsp</span>;<span class="variable">&amp;emsp</span>;PreparedStatement表示预编译的SQL语句对象，用于执行带参数的预编译SQL语句。</div><div class="line">如下是使用PreparedStatement的具体示例：</div></pre></td></tr></table></figure></p>
+<p>import java.sql.*;</p>
+<p>public class Test2 {<br>    public static void main(String[] args) throws Exception {<br>        String url = “jdbc:mysql://localhost:3306/example?useUnicode=true&amp;characterEncoding=gbk”;<br>        String username = “root”;<br>        String passwd = “root”;<br>        String driver = “com.mysql.jdbc.Driver”;<br>        Connection conn = null;<br>        PreparedStatement pst = null;<br>        ResultSet res = null;<br>        try {<br>            Class.forName(driver);<br>            conn = DriverManager.getConnection(url, username, passwd);<br>            pst  = conn.prepareStatement(“select * from Emp where id = ?”);<br>            pst.setInt(1, 1);//传递参数<br>            res = pst.executeQuery();<br>            while(res.next()) {<br>                System.out.println(res.getInt(1) + “ “ + res.getString(2) + “ “ + res.getInt(3) + “ “ + res.getString(4));<br>            }<br>        }catch(SQLException e) {<br>            e.printStackTrace();<br>        }finally {<br>            try {<br>                if(res != null) res.close();<br>                if(conn != null) conn.close();<br>                if(pst != null) pst.close();<br>            }catch(SQLException e) {<br>                System.out.println(e.getMessage());<br>            }<br>        }<br>    }<br>}<br>//程序运行结果为：1 Jobs 25 male<br>```</p>
+<p>&emsp;&emsp;虽然Statement对象和PreparedStatement对象都能够完成相同的功能，但相比之下，PreparedStatement具有以下优点：<br>&emsp;&emsp;（1）效率更高。在使用PreparedStatement对象执行SQL命令时，命令会被数据库进行编译和解析，并放到命令缓冲区。然后，每当执行同一个PreparedStatement对象时，由于缓冲区种可以发现预编译的命令，虽然它会被再解析一次，但不会被再次编译，是可以重复使用的，能够有效提高系统性能，因此，如果要执行插入、更新、删除操作，最好使用PreparedStatement。<br>&emsp;&emsp;（2）代码可读性和可维护性好。<br>&emsp;&emsp;（3）安全性更好。使用PreparedStatement能够预防SQL注入攻击，所谓SQL注入，指的是通过SQL命令插入到Web表单递交或输入域名或页面请求的查询字符串，最终达到欺骗服务器而执行恶意SQL命令的目的。注入只对SQL语句的编译过程有破坏作用，而执行阶段只是把输入串作为数据处理，不再需要对SQL语句进行解析，因此也就避免了类似select * from user where name = ‘aa’ and password = ‘bb’ or 1 = 1的SQL注入问题的发生。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/01/Java基础篇-线程的同步与锁机制/" rel="prev" title="Java基础篇--线程的同步与锁机制">
+                Java基础篇--线程的同步与锁机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">宠辱不惊，看庭前花开花落；去留无意，望天上云卷云舒</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#tags-Java"><span class="nav-number">1.</span> <span class="nav-text">tags: Java</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDBC是如何操作数据库的"><span class="nav-number"></span> <span class="nav-text">JDBC是如何操作数据库的</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017-4-26 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
