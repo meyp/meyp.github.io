@@ -1,0 +1,794 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="数据库," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;之前有被问到数据库事务的相关问题，发现自己回答的不怎么好，所以整理回顾一下原先学习的有关数据库事务的相关知识，加深自己进一步的理解和记忆。">
+<meta name="keywords" content="数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库事务的四大特性以及隔离级别">
+<meta property="og:url" content="http://meyp.github.io/2017/10/17/数据库事务的四大特性以及隔离级别/index.html">
+<meta property="og:site_name" content="ypeng'Blog">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;之前有被问到数据库事务的相关问题，发现自己回答的不怎么好，所以整理回顾一下原先学习的有关数据库事务的相关知识，加深自己进一步的理解和记忆。">
+<meta property="og:updated_time" content="2017-10-17T03:57:19.253Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据库事务的四大特性以及隔离级别">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;之前有被问到数据库事务的相关问题，发现自己回答的不怎么好，所以整理回顾一下原先学习的有关数据库事务的相关知识，加深自己进一步的理解和记忆。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://meyp.github.io/2017/10/17/数据库事务的四大特性以及隔离级别/"/>
+
+
+
+
+
+  <title>数据库事务的四大特性以及隔离级别 | ypeng'Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ypeng'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://meyp.github.io/2017/10/17/数据库事务的四大特性以及隔离级别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ypeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ypeng'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                数据库事务的四大特性以及隔离级别
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T10:24:50+08:00">
+                2017-10-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;之前有被问到数据库事务的相关问题，发现自己回答的不怎么好，所以整理回顾一下原先学习的有关数据库事务的相关知识，加深自己进一步的理解和记忆。<br><a id="more"></a>  </p>
+<h1 id="事务的ACID特性"><a href="#事务的ACID特性" class="headerlink" title="事务的ACID特性"></a>事务的ACID特性</h1><p>&emsp;&emsp;事务具有4个特新：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）和持续性（Durability）。这4个特性简称为ACID特性（ACID properties）。</p>
+<h2 id="（1）原子性（Atomicity）"><a href="#（1）原子性（Atomicity）" class="headerlink" title="（1）原子性（Atomicity）"></a>（1）原子性（Atomicity）</h2><p>&emsp;&emsp;事务是数据库的逻辑工作单位，事务包括的所有操作要么都做，要么都不做。 </p>
+<h2 id="（2）一致性（Consistency"><a href="#（2）一致性（Consistency" class="headerlink" title="（2）一致性（Consistency"></a>（2）一致性（Consistency</h2><p>&emsp;&emsp;一致性是指事务必须使数据库从一个一致性状态变换到另一个一致性状态，也就是说一个事务执行之前和执行之后都必须处于一致性状态。<br>　　拿转账来说，假设用户A和用户B两者的钱加起来一共是5000，那么不管A和B之间如何转账，转几次账，事务结束后两个用户的钱相加起来应该还得是5000，这就是事务的一致性。  
+　　</p>
+<h2 id="（3）隔离性（Isolation）"><a href="#（3）隔离性（Isolation）" class="headerlink" title="（3）隔离性（Isolation）"></a>（3）隔离性（Isolation）</h2><p>&emsp;&emsp;一个事务的执行不能被其他事务干扰。即一个事务的内部操作及使用的数据对其他并发事务是隔离的，并发执行的各个事务之间不能互相干扰。<br>&emsp;&emsp;即要达到这么一种效果：对于任意两个并发的事务T1和T2，在事务T1看来，T2要么在T1开始之前就已经结束，要么在T1结束之后才开始，这样每个事务都感觉不到有其他事务在并发地执行。</p>
+<h2 id="（4）持续性（Durability）"><a href="#（4）持续性（Durability）" class="headerlink" title="（4）持续性（Durability）"></a>（4）持续性（Durability）</h2><p>&emsp;&emsp;持久性也被称为永久性（Permanence），指一个事务一旦提交，它对数据库中数据的改变就应该是永久性的。接下来的其他操作或故障不应该对其执行结果有任何影响。<br>&emsp;&emsp;例如我们在使用JDBC操作数据库时，在提交事务方法后，提示用户事务操作完成，当我们程序执行完成直到看到提示后，就可以认定事务以及正确提交，即使这时候数据库出现了问题，也必须要将我们的事务完全执行完成，否则就会造成我们看到提示事务处理完毕，但是数据库因为故障而没有执行事务的重大错误。  </p>
+<h1 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h1><p>&emsp;&emsp;以上介绍完事务的四大特性(简称ACID)，现在重点来说明下事务的隔离性，当多个线程都开启事务操作数据库中的数据时，数据库系统要能进行隔离操作，以保证各个线程获取数据的准确性，在介绍数据库提供的各种隔离级别之前</p>
+<h2 id="如果不考虑事务的隔离性，会发生的几种问题："><a href="#如果不考虑事务的隔离性，会发生的几种问题：" class="headerlink" title="如果不考虑事务的隔离性，会发生的几种问题："></a>如果不考虑事务的隔离性，会发生的几种问题：</h2><h3 id="（1）脏读-Dirty-Read"><a href="#（1）脏读-Dirty-Read" class="headerlink" title="（1）脏读(Dirty Read)"></a>（1）脏读(Dirty Read)</h3><p>&emsp;&emsp;当一个事务读取另一个事务尚未提交的修改时，产生脏读。<br>&emsp;&emsp;同一事务内不是脏读。 一个事务开始读取了某行数据，但是另外一个事务已经更新了此数据但没有能够及时提交。这是相当危险的，因为很可能所有的操作都被回滚，也就是说读取出的数据其实是错误的。</p>
+<h3 id="（2）非重复读-Nonrepeatable-Read"><a href="#（2）非重复读-Nonrepeatable-Read" class="headerlink" title="（2）非重复读(Nonrepeatable Read)"></a>（2）非重复读(Nonrepeatable Read)</h3><p>&emsp;&emsp;一个事务对同一行数据重复读取两次，但是却得到了不同的结果。同一查询在同一事务中多次进行，由于其他提交事务所做的修改或删除，每次返回不同的结果集，此时发生非重复读。</p>
+<h3 id="（3）幻像读-Phantom-Reads"><a href="#（3）幻像读-Phantom-Reads" class="headerlink" title="（3）幻像读(Phantom Reads)"></a>（3）幻像读(Phantom Reads)</h3><p>&emsp;&emsp;事务在操作过程中进行两次查询，第二次查询的结果包含了第一次查询中未出现的数据（这里并不要求两次查询的SQL语句相同）。这是因为在两次查询过程中有另外一个事务插入数据造成的。</p>
+<p>当对某行执行插入或删除操作，而该行属于某个事务正在读取的行的范围时，会发生幻像读问题。</p>
+<h3 id="（4）丢失修改-Lost-Update"><a href="#（4）丢失修改-Lost-Update" class="headerlink" title="（4）丢失修改(Lost Update)"></a>（4）丢失修改(Lost Update)</h3><p>&emsp;&emsp;第一类：当两个事务更新相同的数据源，如果第一个事务被提交，第二个却被撤销，那么连同第一个事务做的更新也被撤销。<br>&emsp;&emsp;第二类：有两个并发事务同时读取同一行数据，然后其中一个对它进行修改提交，而另一个也进行了修改提交。这就会造成第一次写操作失效。</p>
+<h2 id="四种隔离级别"><a href="#四种隔离级别" class="headerlink" title="四种隔离级别"></a>四种隔离级别</h2><p>&emsp;&emsp;为了兼顾并发效率和异常控制，在标准SQL规范中，定义了4个事务隔离级别，（ Oracle 和 SQL Server 对标准隔离级别有不同的实现 ）</p>
+<h3 id="未提交读-Read-Uncommitted"><a href="#未提交读-Read-Uncommitted" class="headerlink" title="未提交读(Read Uncommitted)"></a>未提交读(Read Uncommitted)</h3><p>&emsp;&emsp;直译就是”读未提交”，意思就是即使一个更新语句没有提交，但是别的事务可以读到这个改变。<br>&emsp;&emsp;<strong>Read Uncommitted允许脏读</strong>。</p>
+<h3 id="已提交读-Read-Committed"><a href="#已提交读-Read-Committed" class="headerlink" title="已提交读(Read Committed)"></a>已提交读(Read Committed)</h3><p>&emsp;&emsp;直译就是”读提交”，意思就是语句提交以后，即执行了 Commit 以后别的事务就能读到这个改变，只能读取到已经提交的数据。Oracle等多数数据库默认都是该级别。<br>&emsp;&emsp;<strong>Read Commited 不允许脏读，但会出现非重复读</strong>。     </p>
+<h3 id="可重复读-Repeatable-Read-："><a href="#可重复读-Repeatable-Read-：" class="headerlink" title="可重复读(Repeatable Read)："></a>可重复读(Repeatable Read)：</h3><p>&emsp;&emsp;直译就是”可以重复读”，这是说在同一个事务里面先后执行同一个查询语句的时候，得到的结果是一样的。<br>&emsp;&emsp;<strong>Repeatable Read 不允许脏读，不允许非重复读，但是会出现幻象读</strong>。</p>
+<h3 id="串行读-Serializable"><a href="#串行读-Serializable" class="headerlink" title="串行读(Serializable)"></a>串行读(Serializable)</h3><p>&emsp;&emsp;直译就是”序列化”，意思是说这个事务执行的时候不允许别的事务并发执行。完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。<br>&emsp;&emsp;<strong>Serializable 不允许不一致现象的出现</strong>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/05/HTTP协议详解/" rel="prev" title="HTTP协议详解">
+                HTTP协议详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="ypeng" />
+          <p class="site-author-name" itemprop="name">ypeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">宠辱不惊，看庭前花开花落；去留无意，望天上云卷云舒</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/meyp" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#事务的ACID特性"><span class="nav-number">1.</span> <span class="nav-text">事务的ACID特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#（1）原子性（Atomicity）"><span class="nav-number">1.1.</span> <span class="nav-text">（1）原子性（Atomicity）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（2）一致性（Consistency"><span class="nav-number">1.2.</span> <span class="nav-text">（2）一致性（Consistency</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（3）隔离性（Isolation）"><span class="nav-number">1.3.</span> <span class="nav-text">（3）隔离性（Isolation）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#（4）持续性（Durability）"><span class="nav-number">1.4.</span> <span class="nav-text">（4）持续性（Durability）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事务的隔离级别"><span class="nav-number">2.</span> <span class="nav-text">事务的隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如果不考虑事务的隔离性，会发生的几种问题："><span class="nav-number">2.1.</span> <span class="nav-text">如果不考虑事务的隔离性，会发生的几种问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（1）脏读-Dirty-Read"><span class="nav-number">2.1.1.</span> <span class="nav-text">（1）脏读(Dirty Read)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（2）非重复读-Nonrepeatable-Read"><span class="nav-number">2.1.2.</span> <span class="nav-text">（2）非重复读(Nonrepeatable Read)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（3）幻像读-Phantom-Reads"><span class="nav-number">2.1.3.</span> <span class="nav-text">（3）幻像读(Phantom Reads)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（4）丢失修改-Lost-Update"><span class="nav-number">2.1.4.</span> <span class="nav-text">（4）丢失修改(Lost Update)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四种隔离级别"><span class="nav-number">2.2.</span> <span class="nav-text">四种隔离级别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#未提交读-Read-Uncommitted"><span class="nav-number">2.2.1.</span> <span class="nav-text">未提交读(Read Uncommitted)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#已提交读-Read-Committed"><span class="nav-number">2.2.2.</span> <span class="nav-text">已提交读(Read Committed)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可重复读-Repeatable-Read-："><span class="nav-number">2.2.3.</span> <span class="nav-text">可重复读(Repeatable Read)：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#串行读-Serializable"><span class="nav-number">2.2.4.</span> <span class="nav-text">串行读(Serializable)</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ypeng</span>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
